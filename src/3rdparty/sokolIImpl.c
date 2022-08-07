@@ -4,6 +4,3 @@
 #include "sokol_gfx.h"
 #include "sokol_fetch.h"
 #include "sokol_time.h"
-
-#define HANDMADE_MATH_IMPLEMENTATION
-#include "HandmadeMath.h"
