@@ -165,7 +165,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="stbImpl.cpp" />
+    <ClCompile Include="lopgl_app.c" />
+    <ClCompile Include="sokolIImpl.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HandmadeMath.h" />
+    <ClInclude Include="lopgl_app.h" />
+    <ClInclude Include="lopgl_fast_obj.h" />
+    <ClInclude Include="sokol_app.h" />
+    <ClInclude Include="sokol_config.h" />
+    <ClInclude Include="sokol_debugtext.h" />
+    <ClInclude Include="sokol_fetch.h" />
+    <ClInclude Include="sokol_gfx.h" />
+    <ClInclude Include="sokol_time.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

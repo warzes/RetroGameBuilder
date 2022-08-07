@@ -5,13 +5,13 @@ https://cdn.discordapp.com/attachments/923269427577913386/977459718677213224/202
 	https://github.com/AlexMartinelle/PicoEngine
 	easy-fps-editor
 	https://www.moddb.com/engines/rfs2-engine/images/image-1#imagebox   (на последнем скрине редактор)
+	https://www.youtube.com/watch?v=SYKgMjCjHk0
+	https://www.youtube.com/watch?v=l8X2mL3xry0
+	https://dedreek.itch.io/grim-pray
+	https://dedreek.itch.io/domd
+	https://www.youtube.com/c/TheOldSchoolCoder/videos
 
-
-
-
-
-
-
+	https://github.com/raysan5/raygui   для гуи
 
 
 
