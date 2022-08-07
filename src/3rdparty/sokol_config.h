@@ -1,10 +1,5 @@
 ﻿#pragma once
 
-/*
-
-
-*/
-
 #define SOKOL_WIN32_FORCE_MAIN
 
 #define SOKOL_GLCORE33

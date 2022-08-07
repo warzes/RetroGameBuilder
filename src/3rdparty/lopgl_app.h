@@ -1,5 +1,4 @@
-#ifndef LOPGL_APP_INCLUDED
-#define LOPGL_APP_INCLUDED
+#pragma once
 
 #include "sokol_app.h"
 #include "sokol_gfx.h"
@@ -139,5 +138,3 @@ extern void lopgl_load_obj(const lopgl_obj_request_t* request);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
-#endif /*LOPGL_APP_INCLUDED*/

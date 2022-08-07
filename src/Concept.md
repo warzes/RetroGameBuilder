@@ -10,6 +10,7 @@ https://cdn.discordapp.com/attachments/923269427577913386/977459718677213224/202
 	https://dedreek.itch.io/grim-pray
 	https://dedreek.itch.io/domd
 	https://www.youtube.com/c/TheOldSchoolCoder/videos
+	https://www.youtube.com/c/Rapha%C3%ABlMarandet/videos
 
 	https://github.com/raysan5/raygui   для гуи
 

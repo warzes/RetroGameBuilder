@@ -1,16 +1,8 @@
-#define LOPGL_APP_IMPL
 #include "sokol_config.h"
 #include "lopgl_app.h"
-
-/*--- IMPLEMENTATION ---------------------------------------------------------*/
-#ifdef LOPGL_APP_IMPL
-
 #include "sokol_fetch.h"
 #include "sokol_time.h"
-
-#define SOKOL_DEBUGTEXT_IMPL
 #include "sokol_debugtext.h"
-#undef SOKOL_DEBUGTEXT_IMPL
 
 #define STB_IMAGE_IMPLEMENTATION
 #if defined(__clang__)
@@ -23,9 +15,7 @@
 #endif
 #undef STB_IMAGE_IMPLEMENTATION
 
-
 #include "HandmadeMath.h"
-//#undef HANDMADE_MATH_IMPLEMENTATION
 
 #define FAST_OBJ_IMPLEMENTATION
 #include "lopgl_fast_obj.h"
@@ -906,5 +896,3 @@ const char* help_fp() {
         "Look:\t\tleft-mouse-btn\n"
         "Zoom:\t\tmouse-scroll\n";
 }
-
-#endif /*LOPGL_APP_IMPL*/
