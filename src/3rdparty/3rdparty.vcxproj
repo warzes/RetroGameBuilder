@@ -165,18 +165,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="lopgl_app.c" />
     <ClCompile Include="sokolIImpl.c" />
+    <ClCompile Include="sokol_imgui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandmadeMath.h" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="lopgl_app.h" />
     <ClInclude Include="lopgl_fast_obj.h" />
     <ClInclude Include="sokol_app.h" />
+    <ClInclude Include="sokol_audio.h" />
     <ClInclude Include="sokol_config.h" />
     <ClInclude Include="sokol_debugtext.h" />
     <ClInclude Include="sokol_fetch.h" />
     <ClInclude Include="sokol_gfx.h" />
+    <ClInclude Include="sokol_imgui.h" />
     <ClInclude Include="sokol_time.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>

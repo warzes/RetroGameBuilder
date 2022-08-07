@@ -13,6 +13,9 @@
 #include <3rdparty/HandmadeMath.h>
 #include <3rdparty/lopgl_app.h>
 
+#include <3rdparty/imgui.h>
+#include <3rdparty/sokol_imgui.h>
+
 #include <string>
 
 #if defined(_MSC_VER)
