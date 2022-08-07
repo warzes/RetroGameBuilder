@@ -173,6 +173,7 @@
     <ClCompile Include="lopgl_app.c" />
     <ClCompile Include="sokolIImpl.c" />
     <ClCompile Include="sokol_imgui.cpp" />
+    <ClCompile Include="sokol_utility.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandmadeMath.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="sokol_gfx.h" />
     <ClInclude Include="sokol_imgui.h" />
     <ClInclude Include="sokol_time.h" />
+    <ClInclude Include="sokol_utility.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

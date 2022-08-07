@@ -3,17 +3,7 @@
 #include "sokol_fetch.h"
 #include "sokol_time.h"
 #include "sokol_debugtext.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-function"
-#endif
 #include "stb_image.h"
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-#undef STB_IMAGE_IMPLEMENTATION
 
 #include "HandmadeMath.h"
 
@@ -839,7 +829,8 @@ static void zoom_fp_camera(struct fp_cam* camera, float yoffset) {
     camera->zoom = HMM_Clamp(camera->min_zoom, camera->zoom, camera->max_zoom);
 }
 
-void handle_input_fp(struct fp_cam* camera, const sapp_event* e, hmm_vec2 mouse_offset) {
+void handle_input_fp(struct fp_cam* camera, const sapp_event* e, hmm_vec2 mouse_offset) 
+{
     if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
         if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
             camera->move_forward = true;

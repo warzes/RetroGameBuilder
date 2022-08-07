@@ -41,11 +41,14 @@ void create_offscreen_pass(int width, int height) {
 	color_img_desc.render_target = true;
 	color_img_desc.width = width;
 	color_img_desc.height = height;
-#ifdef SOKOL_D3D11
-	color_img_desc.pixel_format = SG_PIXELFORMAT_BGRA8;
-#elif
-	color_img_desc.pixel_format = SG_PIXELFORMAT_RGBA8;
-#endif
+//#ifdef SOKOL_D3D11
+//	color_img_desc.pixel_format = SG_PIXELFORMAT_BGRA8;
+//#else
+//	color_img_desc.pixel_format = SG_PIXELFORMAT_RGBA8;
+//#endif
+	color_img_desc.pixel_format = (sg_pixel_format)sapp_color_format();
+
+
 	/* Webgl 1.0 does not support repeat for textures that are not a power of two in size */
 	color_img_desc.wrap_u = SG_WRAP_CLAMP_TO_EDGE;
 	color_img_desc.wrap_v = SG_WRAP_CLAMP_TO_EDGE;

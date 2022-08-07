@@ -1076,7 +1076,7 @@ static const uint8_t fs_bytecode_wgpu[840] = {
 #if !defined(SOKOL_GFX_INCLUDED)
 #error "Please include sokol_gfx.h before shd.h"
 #endif
-static inline const sg_shader_desc* display_shader_desc(sg_backend backend) {
+inline const sg_shader_desc* display_shader_desc(sg_backend backend) {
 #if defined(SOKOL_GLCORE33)
     if (backend == SG_BACKEND_GLCORE33) {
         static sg_shader_desc desc;

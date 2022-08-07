@@ -17,6 +17,7 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="sokol_utility.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandmadeMath.h" />
@@ -41,6 +42,7 @@
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="sokol_audio.h" />
+    <ClInclude Include="sokol_utility.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
