@@ -30,7 +30,7 @@
 
 
 Еще смотреть https://answers.unity.com/storage/temp/47016-2.png
-
+https://img.itch.zone/aW1hZ2UvMTYwNjEwMy85Mzk3OTI1LnBuZw==/original/g0Omgp.png
 
 
 
@@ -61,6 +61,8 @@ https://cdn.discordapp.com/attachments/923269427577913386/977459718677213224/202
 	https://github.com/raysan5/raygui   для гуи
 
 
+	https://demos.laboralphy.fr/village/
+	https://demos.laboralphy.fr/demo1/
 
 //-----------------------------------------------------------------------------
 блок
