@@ -3,21 +3,34 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main2.cpp">
-      <Filter>old</Filter>
-    </ClCompile>
-    <ClCompile Include="GameApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SceneTemp.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="MainFrameRender.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="EditorMain.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneFrameRender.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMain.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
       <UniqueIdentifier>{3b51b61b-fcc6-40d7-9029-71bd81cf99d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="old">
-      <UniqueIdentifier>{92484f43-41f3-4a6e-ae32-fd46945e2f91}</UniqueIdentifier>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{5585b159-be36-4302-83a3-0100c21b52a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{498d546a-95c2-4e84-ad06-58d1c365c092}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

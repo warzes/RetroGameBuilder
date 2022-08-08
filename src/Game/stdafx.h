@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Config.h"
+
 #if defined(_MSC_VER)
 #	pragma warning(push, 0)
 //#	pragma warning(disable : 5039)
@@ -14,11 +16,12 @@
 #include <3rdparty/HandmadeMath.h>
 #include <3rdparty/sokol_utility.h>
 
-#include <3rdparty/imgui.h>
-#include <3rdparty/sokol_imgui.h>
-
-
+#if EDITOR_ON
+#	include <3rdparty/imgui.h>
+#	include <3rdparty/sokol_imgui.h>
+#endif
 
 #if defined(_MSC_VER)
 #	pragma warning(pop)
 #endif
+

@@ -1,5 +1,10 @@
 ﻿#pragma once
 
+/*
+Commits on Aug 8, 2022
+	start tinkering with static analysis test scripts
+*/
+
 #define SOKOL_WIN32_FORCE_MAIN
 
 #define SOKOL_GLCORE33

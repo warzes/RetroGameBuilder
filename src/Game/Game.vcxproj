@@ -173,14 +173,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -189,6 +182,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="EditorMain.h" />
+    <ClInclude Include="GameMain.h" />
+    <ClInclude Include="MainFrameRender.h" />
+    <ClInclude Include="SceneFrameRender.h" />
     <ClInclude Include="SceneTemp.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="stdafx.h" />
