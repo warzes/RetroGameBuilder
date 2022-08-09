@@ -29,6 +29,8 @@ struct AppState
 	SceneFrameRender sceneFrame;
 	MainFrameRender mainFrame;
 } ApplicationState;
+
+World world;
 //-----------------------------------------------------------------------------
 void failCallback()
 {
@@ -68,15 +70,15 @@ void GameAppInit() noexcept
 	const sfetch_desc_t fetchDesc = { .max_requests = 8, .num_channels = 1, .num_lanes = 1 };
 	sfetch_setup(&fetchDesc);
 
-	ApplicationState.mainFrame.Init();
-
 	ApplicationState.sceneFrame.Init(sapp_width(), sapp_height());
+	ApplicationState.mainFrame.Init();
 	ApplicationState.mainFrame.bind.fs_images[SLOT_diffuse_texture] = ApplicationState.sceneFrame.GetImage();
 
 #if EDITOR_ON
 	EditorInit();
 #endif
 
+	world.Init();
 	SceneInit();
 }
 //-----------------------------------------------------------------------------
@@ -86,11 +88,10 @@ void GameAppFrame() noexcept
 
 	_lopgl.frame_time = stm_laptime(&_lopgl.time_stamp);
 
-	if (_lopgl.fp_enabled)
-		update_fp_camera(&_lopgl.fp_cam, stm_ms(_lopgl.frame_time));
+	world.UpdateCamera(stm_ms(_lopgl.frame_time));
 
 	ApplicationState.sceneFrame.SetFrame();
-	SceneDraw();
+	SceneDraw(world);
 	sg_end_pass();
 
 	// render main screen
@@ -98,7 +99,7 @@ void GameAppFrame() noexcept
 	{
 		ApplicationState.mainFrame.Draw();
 
-		renderHelp();
+		renderHelp(world);
 #if EDITOR_ON
 		EditorDraw();
 #endif		
@@ -118,7 +119,7 @@ void GameAppInput(const sapp_event* e) noexcept
 	EditorUpdate(e);
 #endif
 
-	SceneInput(e);
+	SceneInput(world, e);
 }
 //-----------------------------------------------------------------------------
 void GameAppClose() noexcept

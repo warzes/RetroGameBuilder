@@ -1,3 +1,3 @@
 #pragma once
 
-#define EDITOR_ON 1
+#define EDITOR_ON 0

@@ -3,6 +3,12 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="World.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -21,6 +27,12 @@
     <ClInclude Include="GameMain.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -31,6 +43,9 @@
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{498d546a-95c2-4e84-ad06-58d1c365c092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{3f58d987-cee3-4d59-8a8d-446735637d54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

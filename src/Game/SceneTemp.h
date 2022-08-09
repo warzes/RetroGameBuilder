@@ -1,87 +1,52 @@
 #pragma once
 
-struct lopgl_orbital_cam_desc_t
-{
-	hmm_vec3 target;
-	hmm_vec3 up;
-	float pitch;
-	float heading;
-	float distance;
-	// camera limits
-	float min_pitch;
-	float max_pitch;
-	float min_dist;
-	float max_dist;
-	// control options
-	float rotate_speed;
-	float zoom_speed;
-};
+#include "World.h"
 
-struct orbital_cam
-{
-	// camera config
-	hmm_vec3 target;
-	hmm_vec3 up;
-	hmm_vec2 polar;
-	float distance;
-	// camera limits
-	float min_pitch;
-	float max_pitch;
-	float min_dist;
-	float max_dist;
-	// control options
-	float rotate_speed;
-	float zoom_speed;
-	bool enable_rotate;
-	// internal state
-	hmm_vec3 position;
-};
+//struct lopgl_fp_cam_desc_t {
+//	hmm_vec3 position;
+//	hmm_vec3 world_up;
+//	float yaw;
+//	float pitch;
+//	float zoom;
+//	// limits
+//	float min_pitch;
+//	float max_pitch;
+//	float min_zoom;
+//	float max_zoom;
+//	// control options
+//	float movement_speed;
+//	float aim_speed;
+//	float zoom_speed;
+//};
 
-struct lopgl_fp_cam_desc_t {
-	hmm_vec3 position;
-	hmm_vec3 world_up;
-	float yaw;
-	float pitch;
-	float zoom;
-	// limits
-	float min_pitch;
-	float max_pitch;
-	float min_zoom;
-	float max_zoom;
-	// control options
-	float movement_speed;
-	float aim_speed;
-	float zoom_speed;
-};
-
-struct fp_cam
-{
-	// camera attributes
-	hmm_vec3 position;
-	hmm_vec3 world_up;
-	float yaw;
-	float pitch;
-	float zoom;
-	// limits
-	float min_pitch;
-	float max_pitch;
-	float min_zoom;
-	float max_zoom;
-	// control options
-	float movement_speed;
-	float aim_speed;
-	float zoom_speed;
-	// control state
-	bool enable_aim;
-	bool move_forward;
-	bool move_backward;
-	bool move_left;
-	bool move_right;
-	// internal state
-	hmm_vec3 front;
-	hmm_vec3 up;
-	hmm_vec3 right;
-};
+//struct fp_cam
+//{
+//	// camera attributes
+//	hmm_vec3 position;
+//	hmm_vec3 world_up;
+//	float yaw;
+//	float pitch;
+//	float zoom;
+//	// limits
+//	float min_pitch;
+//	float max_pitch;
+//	float min_zoom;
+//	float max_zoom;
+//	// control options
+//	float movement_speed;
+//	float aim_speed;
+//	float zoom_speed;
+//	// control state
+//	bool enable_aim;
+//	bool move_forward;
+//	bool move_backward;
+//	bool move_left;
+//	bool move_right;
+//	// internal state
+//	hmm_vec3 front;
+//	hmm_vec3 up;
+//	hmm_vec3 right;
+//};
 
 struct _cubemap_request_t
 {
@@ -96,144 +61,86 @@ struct _cubemap_request_t
 
 struct lopgl_state_t
 {
-	orbital_cam orbital_cam;
-	fp_cam fp_cam;
-	bool fp_enabled;
+	//fp_cam fp_cam;
+	//bool fp_enabled;
 	bool show_help;
 	bool hide_ui;
 	bool first_mouse;
 	hmm_vec2 last_mouse;
-	hmm_vec2 last_touch[SAPP_MAX_TOUCHPOINTS];
 	uint64_t time_stamp;
 	uint64_t frame_time;
 	_cubemap_request_t cubemap_req;
 } _lopgl;
 
-inline void update_orbital_cam_vectors(struct orbital_cam* camera) 
-{
-	float cos_p = cosf(HMM_ToRadians(camera->polar.X));
-	float sin_p = sinf(HMM_ToRadians(camera->polar.X));
-	float cos_h = cosf(HMM_ToRadians(camera->polar.Y));
-	float sin_h = sinf(HMM_ToRadians(camera->polar.Y));
-	camera->position = HMM_Vec3(
-		camera->distance * cos_p * sin_h,
-		camera->distance * -sin_p,
-		camera->distance * cos_p * cos_h
-	);
-}
+//inline void update_fp_cam_vectors(struct fp_cam* camera) {
+//	// Calculate the new Front vector
+//	hmm_vec3 front;
+//	front.X = cosf(HMM_ToRadians(camera->yaw)) * cosf(HMM_ToRadians(camera->pitch));
+//	front.Y = sinf(HMM_ToRadians(camera->pitch));
+//	front.Z = sinf(HMM_ToRadians(camera->yaw)) * cosf(HMM_ToRadians(camera->pitch));
+//	camera->front = HMM_NormalizeVec3(front);
+//	// Also re-calculate the Right and Up vector
+//	// Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+//	camera->right = HMM_NormalizeVec3(HMM_Cross(camera->front, camera->world_up));
+//	camera->up = HMM_NormalizeVec3(HMM_Cross(camera->right, camera->front));
+//}
 
-void lopgl_set_orbital_cam(lopgl_orbital_cam_desc_t desc)
-{
-	// camera attributes
-	_lopgl.orbital_cam.target = desc.target;
-	_lopgl.orbital_cam.up = desc.up;
-	_lopgl.orbital_cam.polar = HMM_Vec2(desc.pitch, desc.heading);
-	_lopgl.orbital_cam.distance = desc.distance;
-	// limits
-	_lopgl.orbital_cam.min_pitch = desc.min_pitch;
-	_lopgl.orbital_cam.max_pitch = desc.max_pitch;
-	_lopgl.orbital_cam.min_dist = desc.min_dist;
-	_lopgl.orbital_cam.max_dist = desc.max_dist;
-	// control options
-	_lopgl.orbital_cam.rotate_speed = desc.rotate_speed;
-	_lopgl.orbital_cam.zoom_speed = desc.zoom_speed;
-	// control state
-	_lopgl.orbital_cam.enable_rotate = false;
+//void lopgl_set_fp_cam(lopgl_fp_cam_desc_t desc) 
+//{
+//	// camera attributes
+//	_lopgl.fp_cam.position = desc.position;
+//	_lopgl.fp_cam.world_up = desc.world_up;
+//	_lopgl.fp_cam.yaw = desc.yaw;
+//	_lopgl.fp_cam.pitch = desc.pitch;
+//	_lopgl.fp_cam.zoom = desc.zoom;
+//	// limits
+//	_lopgl.fp_cam.min_pitch = desc.min_pitch;
+//	_lopgl.fp_cam.max_pitch = desc.max_pitch;
+//	_lopgl.fp_cam.min_zoom = desc.min_zoom;
+//	_lopgl.fp_cam.max_zoom = desc.max_zoom;
+//	// control options
+//	_lopgl.fp_cam.movement_speed = desc.movement_speed;
+//	_lopgl.fp_cam.aim_speed = desc.aim_speed;
+//	_lopgl.fp_cam.zoom_speed = desc.zoom_speed;
+//	// control state
+//	_lopgl.fp_cam.enable_aim = false;
+//	_lopgl.fp_cam.move_forward = false;
+//	_lopgl.fp_cam.move_backward = false;
+//	_lopgl.fp_cam.move_left = false;
+//	_lopgl.fp_cam.move_right = false;
+//
+//	update_fp_cam_vectors(&_lopgl.fp_cam);
+//}
 
-	update_orbital_cam_vectors(&_lopgl.orbital_cam);
-}
+//void update_fp_camera(struct fp_cam* camera, float delta_time) 
+//{
+//	float velocity = camera->movement_speed * delta_time;
+//	if (camera->move_forward) {
+//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->front, velocity);
+//		camera->position = HMM_AddVec3(camera->position, offset);
+//	}
+//	if (camera->move_backward) {
+//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->front, velocity);
+//		camera->position = HMM_SubtractVec3(camera->position, offset);
+//	}
+//	if (camera->move_left) {
+//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->right, velocity);
+//		camera->position = HMM_SubtractVec3(camera->position, offset);
+//	}
+//	if (camera->move_right) {
+//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->right, velocity);
+//		camera->position = HMM_AddVec3(camera->position, offset);
+//	}
+//}
 
-inline void update_fp_cam_vectors(struct fp_cam* camera) {
-	// Calculate the new Front vector
-	hmm_vec3 front;
-	front.X = cosf(HMM_ToRadians(camera->yaw)) * cosf(HMM_ToRadians(camera->pitch));
-	front.Y = sinf(HMM_ToRadians(camera->pitch));
-	front.Z = sinf(HMM_ToRadians(camera->yaw)) * cosf(HMM_ToRadians(camera->pitch));
-	camera->front = HMM_NormalizeVec3(front);
-	// Also re-calculate the Right and Up vector
-	// Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	camera->right = HMM_NormalizeVec3(HMM_Cross(camera->front, camera->world_up));
-	camera->up = HMM_NormalizeVec3(HMM_Cross(camera->right, camera->front));
-}
-
-void lopgl_set_fp_cam(lopgl_fp_cam_desc_t desc) 
-{
-	// camera attributes
-	_lopgl.fp_cam.position = desc.position;
-	_lopgl.fp_cam.world_up = desc.world_up;
-	_lopgl.fp_cam.yaw = desc.yaw;
-	_lopgl.fp_cam.pitch = desc.pitch;
-	_lopgl.fp_cam.zoom = desc.zoom;
-	// limits
-	_lopgl.fp_cam.min_pitch = desc.min_pitch;
-	_lopgl.fp_cam.max_pitch = desc.max_pitch;
-	_lopgl.fp_cam.min_zoom = desc.min_zoom;
-	_lopgl.fp_cam.max_zoom = desc.max_zoom;
-	// control options
-	_lopgl.fp_cam.movement_speed = desc.movement_speed;
-	_lopgl.fp_cam.aim_speed = desc.aim_speed;
-	_lopgl.fp_cam.zoom_speed = desc.zoom_speed;
-	// control state
-	_lopgl.fp_cam.enable_aim = false;
-	_lopgl.fp_cam.move_forward = false;
-	_lopgl.fp_cam.move_backward = false;
-	_lopgl.fp_cam.move_left = false;
-	_lopgl.fp_cam.move_right = false;
-
-	update_fp_cam_vectors(&_lopgl.fp_cam);
-}
-
-void update_fp_camera(struct fp_cam* camera, float delta_time) 
-{
-	float velocity = camera->movement_speed * delta_time;
-	if (camera->move_forward) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(camera->front, velocity);
-		camera->position = HMM_AddVec3(camera->position, offset);
-	}
-	if (camera->move_backward) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(camera->front, velocity);
-		camera->position = HMM_SubtractVec3(camera->position, offset);
-	}
-	if (camera->move_left) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(camera->right, velocity);
-		camera->position = HMM_SubtractVec3(camera->position, offset);
-	}
-	if (camera->move_right) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(camera->right, velocity);
-		camera->position = HMM_AddVec3(camera->position, offset);
-	}
-}
-
-hmm_mat4 view_matrix_fp(struct fp_cam* camera) 
-{
-	hmm_vec3 target = HMM_AddVec3(camera->position, camera->front);
-	return HMM_LookAt(camera->position, target, camera->up);
-}
-
-hmm_mat4 view_matrix_orbital(struct orbital_cam* camera) {
-	return HMM_LookAt(camera->position, camera->target, camera->up);
-}
-
-hmm_mat4 lopgl_view_matrix() {
-	if (_lopgl.fp_enabled) {
-		return view_matrix_fp(&_lopgl.fp_cam);
-	}
-	else {
-		return view_matrix_orbital(&_lopgl.orbital_cam);
-	}
-}
+//hmm_mat4 view_matrix_fp(struct fp_cam* camera) 
+//{
+//	hmm_vec3 target = HMM_AddVec3(camera->position, camera->front);
+//	return HMM_LookAt(camera->position, target, camera->up);
+//}
 
 float lopgl_fov() {
 	return 45.0f;
-}
-
-hmm_vec3 lopgl_camera_position() {
-	if (_lopgl.fp_enabled) {
-		return _lopgl.fp_cam.position;
-	}
-	else {
-		return _lopgl.orbital_cam.position;
-	}
 }
 
 void failCallback();
@@ -252,7 +159,7 @@ const char* help_orbital() {
 		"Zoom:\t\tmouse-scroll\n";
 }
 
-void renderHelp() {
+void renderHelp(const World& world) {
 	if (_lopgl.hide_ui) {
 		return;
 	}
@@ -269,11 +176,11 @@ void renderHelp() {
 		sdtx_color4b(0x00, 0xff, 0x00, 0xaf);
 		sdtx_puts("Hide help:\t'H'\n\n");
 		sdtx_printf("Frame Time:\t%.3f\n\n", stm_ms(_lopgl.frame_time));
-		sdtx_printf("Orbital Cam\t[%c]\n", _lopgl.fp_enabled ? ' ' : '*');
-		sdtx_printf("FP Cam\t\t[%c]\n\n", _lopgl.fp_enabled ? '*' : ' ');
+		sdtx_printf("Orbital Cam\t[%c]\n", world.GetCameraType() == CameraType::Orbital ? ' ' : '*');
+		sdtx_printf("FP Cam\t\t[%c]\n\n", world.GetCameraType() == CameraType::Free ? '*' : ' ');
 		sdtx_puts("Switch Cam:\t'C'\n\n");
 
-		if (_lopgl.fp_enabled) {
+		if (world.GetCameraType() == CameraType::Free) {
 			sdtx_puts(help_fp());
 		}
 		else {
@@ -295,40 +202,10 @@ hmm_vec3 vegetation[5];
 
 void SceneInit()
 {
-	lopgl_set_orbital_cam({
-		.target = {0.0f, 0.0f, 0.0f},
-		.up = {0.0f, 1.0f, 0.0f},
-		.pitch = 0.f,
-		.heading = 0.f,
-		.distance = 6.f,
-		.min_pitch = -89.f,
-		.max_pitch = 89.f,
-		.min_dist = 1.f,
-		.max_dist = 10.f,
-		.rotate_speed = 1.f,
-		.zoom_speed = .5f,
-		});
-
-	lopgl_set_fp_cam({
-		.position = {0.0f, 0.0f, 6.0f},
-		.world_up = {0.0f, 1.0f, 0.0f},
-		.yaw = -90.f,
-		.pitch = 0.f,
-		.zoom = 45.f,
-		.min_pitch = -89.f,
-		.max_pitch = 89.f,
-		.min_zoom = 1.f,
-		.max_zoom = 45.f,
-		.movement_speed = 0.005f,
-		.aim_speed = 1.f,
-		.zoom_speed = .1f,
-		});
-
-	_lopgl.fp_enabled = false;
+	//_lopgl.fp_enabled = false;
 	_lopgl.first_mouse = true;
 	_lopgl.show_help = false;
 	_lopgl.hide_ui = false;
-
 
 	constexpr float cube_vertices[] = {
 		// positions          // texture Coords
@@ -471,10 +348,9 @@ void SceneInit()
 	vegetation[4] = HMM_Vec3(0.5f, 0.0f, -0.6f);
 }
 
-
-void SceneDraw()
+void SceneDraw(const World& world)
 {
-	hmm_mat4 view = lopgl_view_matrix();
+	hmm_mat4 view = world.GetCameraViewMatrix();
 	hmm_mat4 projection = HMM_Perspective(lopgl_fov(), (float)sapp_width() / (float)sapp_height(), 0.1f, 100.0f);
 
 	vs_params_t vs_params = {
@@ -508,7 +384,8 @@ void SceneDraw()
 
 	sg_apply_bindings(&bind_transparent);
 
-	hmm_vec3 position = lopgl_camera_position();
+	hmm_vec3 position = world.GetPosition();
+
 	// simple bubble sort algorithm to sort vegetation from furthest to nearest
 	for (int i = 1; i < 5; ++i) {
 		for (int j = i - 1; j >= 0; --j) {
@@ -532,160 +409,76 @@ void SceneDraw()
 	}
 }
 
-static void aim_fp_camera(struct fp_cam* camera, hmm_vec2 mouse_offset) {
-	camera->yaw += mouse_offset.X * camera->aim_speed;
-	camera->pitch += mouse_offset.Y * camera->aim_speed;
+//static void aim_fp_camera(struct fp_cam* camera, hmm_vec2 mouse_offset) {
+//	camera->yaw += mouse_offset.X * camera->aim_speed;
+//	camera->pitch += mouse_offset.Y * camera->aim_speed;
+//
+//	camera->pitch = HMM_Clamp(camera->min_pitch, camera->pitch, camera->max_pitch);
+//
+//	update_fp_cam_vectors(camera);
+//}
 
-	camera->pitch = HMM_Clamp(camera->min_pitch, camera->pitch, camera->max_pitch);
-
-	update_fp_cam_vectors(camera);
-}
-
-static void zoom_fp_camera(struct fp_cam* camera, float yoffset) {
-	camera->zoom -= yoffset * camera->zoom_speed;
-	camera->zoom = HMM_Clamp(camera->min_zoom, camera->zoom, camera->max_zoom);
-}
+//static void zoom_fp_camera(struct fp_cam* camera, float yoffset) {
+//	camera->zoom -= yoffset * camera->zoom_speed;
+//	camera->zoom = HMM_Clamp(camera->min_zoom, camera->zoom, camera->max_zoom);
+//}
 
 
-void handle_input_fp(struct fp_cam* camera, const sapp_event* e, hmm_vec2 mouse_offset)
-{
-	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
-		if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
-			camera->move_forward = true;
-		}
-		else if (e->key_code == SAPP_KEYCODE_S || e->key_code == SAPP_KEYCODE_DOWN) {
-			camera->move_backward = true;
-		}
-		else if (e->key_code == SAPP_KEYCODE_A || e->key_code == SAPP_KEYCODE_LEFT) {
-			camera->move_left = true;
-		}
-		else if (e->key_code == SAPP_KEYCODE_D || e->key_code == SAPP_KEYCODE_RIGHT) {
-			camera->move_right = true;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_KEY_UP) {
-		if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
-			camera->move_forward = false;
-		}
-		else if (e->key_code == SAPP_KEYCODE_S || e->key_code == SAPP_KEYCODE_DOWN) {
-			camera->move_backward = false;
-		}
-		else if (e->key_code == SAPP_KEYCODE_A || e->key_code == SAPP_KEYCODE_LEFT) {
-			camera->move_left = false;
-		}
-		else if (e->key_code == SAPP_KEYCODE_D || e->key_code == SAPP_KEYCODE_RIGHT) {
-			camera->move_right = false;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_DOWN) {
-		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
-			camera->enable_aim = true;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_UP) {
-		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
-			camera->enable_aim = false;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
-		if (camera->enable_aim) {
-			aim_fp_camera(camera, mouse_offset);
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_SCROLL) {
-		zoom_fp_camera(camera, e->scroll_y);
-	}
-}
+//void handle_input_fp(struct fp_cam* camera, const sapp_event* e, hmm_vec2 mouse_offset)
+//{
+//	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
+//		if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
+//			camera->move_forward = true;
+//		}
+//		else if (e->key_code == SAPP_KEYCODE_S || e->key_code == SAPP_KEYCODE_DOWN) {
+//			camera->move_backward = true;
+//		}
+//		else if (e->key_code == SAPP_KEYCODE_A || e->key_code == SAPP_KEYCODE_LEFT) {
+//			camera->move_left = true;
+//		}
+//		else if (e->key_code == SAPP_KEYCODE_D || e->key_code == SAPP_KEYCODE_RIGHT) {
+//			camera->move_right = true;
+//		}
+//	}
+//	else if (e->type == SAPP_EVENTTYPE_KEY_UP) {
+//		if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
+//			camera->move_forward = false;
+//		}
+//		else if (e->key_code == SAPP_KEYCODE_S || e->key_code == SAPP_KEYCODE_DOWN) {
+//			camera->move_backward = false;
+//		}
+//		else if (e->key_code == SAPP_KEYCODE_A || e->key_code == SAPP_KEYCODE_LEFT) {
+//			camera->move_left = false;
+//		}
+//		else if (e->key_code == SAPP_KEYCODE_D || e->key_code == SAPP_KEYCODE_RIGHT) {
+//			camera->move_right = false;
+//		}
+//	}
+//	else if (e->type == SAPP_EVENTTYPE_MOUSE_DOWN) {
+//		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
+//			camera->enable_aim = true;
+//		}
+//	}
+//	else if (e->type == SAPP_EVENTTYPE_MOUSE_UP) {
+//		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
+//			camera->enable_aim = false;
+//		}
+//	}
+//	else if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
+//		if (camera->enable_aim) {
+//			aim_fp_camera(camera, mouse_offset);
+//		}
+//	}
+//	else if (e->type == SAPP_EVENTTYPE_MOUSE_SCROLL) {
+//		zoom_fp_camera(camera, e->scroll_y);
+//	}
+//}
 
-static void move_orbital_camera(struct orbital_cam* camera, hmm_vec2 mouse_offset) {
-	camera->polar.Y -= mouse_offset.X * camera->rotate_speed;
-	const float pitch = camera->polar.X + mouse_offset.Y * camera->rotate_speed;
-	camera->polar.X = HMM_Clamp(camera->min_pitch, pitch, camera->max_pitch);
-}
-
-static void zoom_orbital_camera(struct orbital_cam* camera, float val) {
-	const float new_dist = camera->distance - val * camera->zoom_speed;
-	camera->distance = HMM_Clamp(new_dist, camera->min_dist, camera->max_dist);
-}
-
-void handle_input_orbital(struct orbital_cam* camera, const sapp_event* e, hmm_vec2 mouse_offset) {
-
-	if (e->type == SAPP_EVENTTYPE_MOUSE_DOWN) {
-		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
-			camera->enable_rotate = true;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_UP) {
-		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
-			camera->enable_rotate = false;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
-		if (camera->enable_rotate) {
-			move_orbital_camera(camera, mouse_offset);
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_MOUSE_SCROLL) {
-		zoom_orbital_camera(camera, e->scroll_y);
-	}
-	else if (e->type == SAPP_EVENTTYPE_TOUCHES_BEGAN) {
-		for (int i = 0; i < e->num_touches; ++i) {
-			const sapp_touchpoint* touch = &e->touches[i];
-			_lopgl.last_touch[touch->identifier].X = touch->pos_x;
-			_lopgl.last_touch[touch->identifier].Y = touch->pos_y;
-		}
-	}
-	else if (e->type == SAPP_EVENTTYPE_TOUCHES_MOVED) {
-		if (e->num_touches == 1) {
-			const sapp_touchpoint* touch = &e->touches[0];
-			hmm_vec2* last_touch = &_lopgl.last_touch[touch->identifier];
-
-			hmm_vec2 mouse_offset = HMM_Vec2(0.0f, 0.0f);
-
-			mouse_offset.X = touch->pos_x - last_touch->X;
-			mouse_offset.Y = last_touch->Y - touch->pos_y;
-
-			// reduce speed of touch controls
-			mouse_offset.X *= 0.3;
-			mouse_offset.Y *= 0.3;
-
-			move_orbital_camera(camera, mouse_offset);
-		}
-		else if (e->num_touches == 2) {
-			const sapp_touchpoint* touch0 = &e->touches[0];
-			const sapp_touchpoint* touch1 = &e->touches[1];
-
-			const hmm_vec2 v0 = HMM_Vec2(touch0->pos_x, touch0->pos_y);
-			const hmm_vec2 v1 = HMM_Vec2(touch1->pos_x, touch1->pos_y);
-
-			const hmm_vec2* prev_v0 = &_lopgl.last_touch[touch0->identifier];
-			const hmm_vec2* prev_v1 = &_lopgl.last_touch[touch1->identifier];
-
-			const float length0 = HMM_LengthVec2(HMM_SubtractVec2(v1, v0));
-			const float length1 = HMM_LengthVec2(HMM_SubtractVec2(*prev_v1, *prev_v0));
-
-			float diff = length0 - length1;
-			// reduce speed of touch controls
-			diff *= 0.1;
-
-			zoom_orbital_camera(camera, diff);
-		}
-
-		// update all touch coords
-		for (int i = 0; i < e->num_touches; ++i) {
-			const sapp_touchpoint* touch = &e->touches[i];
-			_lopgl.last_touch[touch->identifier].X = touch->pos_x;
-			_lopgl.last_touch[touch->identifier].Y = touch->pos_y;
-		}
-	}
-
-	update_orbital_cam_vectors(camera);
-}
-
-void SceneInput(const sapp_event* e) {
+void SceneInput(World& world, const sapp_event* e) {
 	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
 		if (e->key_code == SAPP_KEYCODE_C) {
-			_lopgl.fp_enabled = !_lopgl.fp_enabled;
+			if (world.GetCameraType() == CameraType::Free) world.SetCameraType(CameraType::Orbital);
+			else world.SetCameraType(CameraType::Free);
 		}
 		else if (e->key_code == SAPP_KEYCODE_H) {
 			_lopgl.show_help = !_lopgl.show_help;
@@ -713,10 +506,5 @@ void SceneInput(const sapp_event* e) {
 		_lopgl.last_mouse.Y = e->mouse_y;
 	}
 
-	if (_lopgl.fp_enabled) {
-		handle_input_fp(&_lopgl.fp_cam, e, mouse_offset);
-	}
-	else {
-		handle_input_orbital(&_lopgl.orbital_cam, e, mouse_offset);
-	}
+	world.Input(e, mouse_offset);
 }
