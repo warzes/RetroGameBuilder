@@ -28,10 +28,6 @@ class OrbitalCamera
 public:
 	void Set(const OrbitalCameraDesc& desc);
 
-	void updateVectors();
-
-	void Move(hmm_vec2 mouse_offset); // TODO: rename
-	void Zoom(float val);
 	void Input(const sapp_event* e, hmm_vec2 mouse_offset);
 
 	hmm_mat4 GetViewMatrix() const { return HMM_LookAt(position, target, up); }
@@ -53,6 +49,11 @@ public:
 	bool enable_rotate;
 	// internal state
 	hmm_vec3 position;
+
+private:
+	void updateVectors();
+	void mouseMove(hmm_vec2 mouse_offset); // TODO: rename
+	void zoom(float val);
 };
 
 struct FreeCameraDesc 

@@ -23,33 +23,6 @@ void OrbitalCamera::Set(const OrbitalCameraDesc& desc)
 
 	updateVectors();
 }
-//-----------------------------------------------------------------------------
-void OrbitalCamera::updateVectors()
-{
-	const float cos_p = cosf(HMM_ToRadians(polar.X));
-	const float sin_p = sinf(HMM_ToRadians(polar.X));
-	const float cos_h = cosf(HMM_ToRadians(polar.Y));
-	const float sin_h = sinf(HMM_ToRadians(polar.Y));
-	position = HMM_Vec3(
-		distance *  cos_p * sin_h,
-		distance * -sin_p,
-		distance *  cos_p * cos_h
-	);
-}
-//-----------------------------------------------------------------------------
-void OrbitalCamera::Move(hmm_vec2 mouse_offset)
-{
-	polar.Y -= mouse_offset.X * rotate_speed;
-	const float pitch = polar.X + mouse_offset.Y * rotate_speed;
-	polar.X = HMM_Clamp(min_pitch, pitch, max_pitch);
-}
-//-----------------------------------------------------------------------------
-void OrbitalCamera::Zoom(float val)
-{
-	const float new_dist = distance - val * zoom_speed;
-	distance = HMM_Clamp(new_dist, min_dist, max_dist);
-}
-//-----------------------------------------------------------------------------
 void OrbitalCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 {
 	if (e->type == SAPP_EVENTTYPE_MOUSE_DOWN) {
@@ -64,11 +37,11 @@ void OrbitalCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 	}
 	else if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
 		if (enable_rotate) {
-			Move(mouse_offset);
+			mouseMove(mouse_offset);
 		}
 	}
 	else if (e->type == SAPP_EVENTTYPE_MOUSE_SCROLL) {
-		Zoom(e->scroll_y);
+		zoom(e->scroll_y);
 	}
 	else if (e->type == SAPP_EVENTTYPE_TOUCHES_BEGAN) {
 		for (int i = 0; i < e->num_touches; ++i) {
@@ -91,7 +64,7 @@ void OrbitalCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 			mouse_offset.X *= 0.3;
 			mouse_offset.Y *= 0.3;
 
-			Move(mouse_offset);
+			mouseMove(mouse_offset);
 		}
 		else if (e->num_touches == 2) {
 			const sapp_touchpoint* touch0 = &e->touches[0];
@@ -110,7 +83,7 @@ void OrbitalCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 			// reduce speed of touch controls
 			diff *= 0.1;
 
-			Zoom(diff);
+			zoom(diff);
 		}
 
 		// update all touch coords
@@ -123,6 +96,34 @@ void OrbitalCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 
 	updateVectors();
 }
+//-----------------------------------------------------------------------------
+void OrbitalCamera::updateVectors()
+{
+	const float cos_p = cosf(HMM_ToRadians(polar.X));
+	const float sin_p = sinf(HMM_ToRadians(polar.X));
+	const float cos_h = cosf(HMM_ToRadians(polar.Y));
+	const float sin_h = sinf(HMM_ToRadians(polar.Y));
+	position = HMM_Vec3(
+		distance *  cos_p * sin_h,
+		distance * -sin_p,
+		distance *  cos_p * cos_h
+	);
+}
+//-----------------------------------------------------------------------------
+void OrbitalCamera::mouseMove(hmm_vec2 mouse_offset)
+{
+	polar.Y -= mouse_offset.X * rotate_speed;
+	const float pitch = polar.X + mouse_offset.Y * rotate_speed;
+	polar.X = HMM_Clamp(min_pitch, pitch, max_pitch);
+}
+//-----------------------------------------------------------------------------
+void OrbitalCamera::zoom(float val)
+{
+	const float new_dist = distance - val * zoom_speed;
+	distance = HMM_Clamp(new_dist, min_dist, max_dist);
+}
+//-----------------------------------------------------------------------------
+
 //-----------------------------------------------------------------------------
 void FreeCamera::Set(const FreeCameraDesc& desc)
 {
@@ -153,21 +154,21 @@ void FreeCamera::Set(const FreeCameraDesc& desc)
 //-----------------------------------------------------------------------------
 void FreeCamera::Update(float delta_time)
 {
-	float velocity = movement_speed * delta_time;
+	const float velocity = movement_speed * delta_time;
 	if (move_forward) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(front, velocity);
+		const hmm_vec3 offset = HMM_MultiplyVec3f(front, velocity);
 		position = HMM_AddVec3(position, offset);
 	}
 	if (move_backward) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(front, velocity);
+		const hmm_vec3 offset = HMM_MultiplyVec3f(front, velocity);
 		position = HMM_SubtractVec3(position, offset);
 	}
 	if (move_left) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(right, velocity);
+		const hmm_vec3 offset = HMM_MultiplyVec3f(right, velocity);
 		position = HMM_SubtractVec3(position, offset);
 	}
 	if (move_right) {
-		hmm_vec3 offset = HMM_MultiplyVec3f(right, velocity);
+		const hmm_vec3 offset = HMM_MultiplyVec3f(right, velocity);
 		position = HMM_AddVec3(position, offset);
 	}
 }
@@ -241,13 +242,13 @@ void FreeCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 void FreeCamera::updateVectors()
 {
 	// Calculate the new Front vector
-	hmm_vec3 front =
+	const hmm_vec3 vfront =
 	{
 		cosf(HMM_ToRadians(yaw)) * cosf(HMM_ToRadians(pitch)),
 		sinf(HMM_ToRadians(pitch)),
 		sinf(HMM_ToRadians(yaw)) * cosf(HMM_ToRadians(pitch))
 	};
-	front = HMM_NormalizeVec3(front);
+	front = HMM_NormalizeVec3(vfront);
 	// Also re-calculate the Right and Up vector
 	// Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	right = HMM_NormalizeVec3(HMM_Cross(front, world_up));

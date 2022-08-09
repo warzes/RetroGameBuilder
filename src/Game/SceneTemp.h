@@ -2,52 +2,6 @@
 
 #include "World.h"
 
-//struct lopgl_fp_cam_desc_t {
-//	hmm_vec3 position;
-//	hmm_vec3 world_up;
-//	float yaw;
-//	float pitch;
-//	float zoom;
-//	// limits
-//	float min_pitch;
-//	float max_pitch;
-//	float min_zoom;
-//	float max_zoom;
-//	// control options
-//	float movement_speed;
-//	float aim_speed;
-//	float zoom_speed;
-//};
-
-//struct fp_cam
-//{
-//	// camera attributes
-//	hmm_vec3 position;
-//	hmm_vec3 world_up;
-//	float yaw;
-//	float pitch;
-//	float zoom;
-//	// limits
-//	float min_pitch;
-//	float max_pitch;
-//	float min_zoom;
-//	float max_zoom;
-//	// control options
-//	float movement_speed;
-//	float aim_speed;
-//	float zoom_speed;
-//	// control state
-//	bool enable_aim;
-//	bool move_forward;
-//	bool move_backward;
-//	bool move_left;
-//	bool move_right;
-//	// internal state
-//	hmm_vec3 front;
-//	hmm_vec3 up;
-//	hmm_vec3 right;
-//};
-
 struct _cubemap_request_t
 {
 	sg_image img_id;
@@ -61,8 +15,6 @@ struct _cubemap_request_t
 
 struct lopgl_state_t
 {
-	//fp_cam fp_cam;
-	//bool fp_enabled;
 	bool show_help;
 	bool hide_ui;
 	bool first_mouse;
@@ -71,73 +23,6 @@ struct lopgl_state_t
 	uint64_t frame_time;
 	_cubemap_request_t cubemap_req;
 } _lopgl;
-
-//inline void update_fp_cam_vectors(struct fp_cam* camera) {
-//	// Calculate the new Front vector
-//	hmm_vec3 front;
-//	front.X = cosf(HMM_ToRadians(camera->yaw)) * cosf(HMM_ToRadians(camera->pitch));
-//	front.Y = sinf(HMM_ToRadians(camera->pitch));
-//	front.Z = sinf(HMM_ToRadians(camera->yaw)) * cosf(HMM_ToRadians(camera->pitch));
-//	camera->front = HMM_NormalizeVec3(front);
-//	// Also re-calculate the Right and Up vector
-//	// Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-//	camera->right = HMM_NormalizeVec3(HMM_Cross(camera->front, camera->world_up));
-//	camera->up = HMM_NormalizeVec3(HMM_Cross(camera->right, camera->front));
-//}
-
-//void lopgl_set_fp_cam(lopgl_fp_cam_desc_t desc) 
-//{
-//	// camera attributes
-//	_lopgl.fp_cam.position = desc.position;
-//	_lopgl.fp_cam.world_up = desc.world_up;
-//	_lopgl.fp_cam.yaw = desc.yaw;
-//	_lopgl.fp_cam.pitch = desc.pitch;
-//	_lopgl.fp_cam.zoom = desc.zoom;
-//	// limits
-//	_lopgl.fp_cam.min_pitch = desc.min_pitch;
-//	_lopgl.fp_cam.max_pitch = desc.max_pitch;
-//	_lopgl.fp_cam.min_zoom = desc.min_zoom;
-//	_lopgl.fp_cam.max_zoom = desc.max_zoom;
-//	// control options
-//	_lopgl.fp_cam.movement_speed = desc.movement_speed;
-//	_lopgl.fp_cam.aim_speed = desc.aim_speed;
-//	_lopgl.fp_cam.zoom_speed = desc.zoom_speed;
-//	// control state
-//	_lopgl.fp_cam.enable_aim = false;
-//	_lopgl.fp_cam.move_forward = false;
-//	_lopgl.fp_cam.move_backward = false;
-//	_lopgl.fp_cam.move_left = false;
-//	_lopgl.fp_cam.move_right = false;
-//
-//	update_fp_cam_vectors(&_lopgl.fp_cam);
-//}
-
-//void update_fp_camera(struct fp_cam* camera, float delta_time) 
-//{
-//	float velocity = camera->movement_speed * delta_time;
-//	if (camera->move_forward) {
-//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->front, velocity);
-//		camera->position = HMM_AddVec3(camera->position, offset);
-//	}
-//	if (camera->move_backward) {
-//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->front, velocity);
-//		camera->position = HMM_SubtractVec3(camera->position, offset);
-//	}
-//	if (camera->move_left) {
-//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->right, velocity);
-//		camera->position = HMM_SubtractVec3(camera->position, offset);
-//	}
-//	if (camera->move_right) {
-//		hmm_vec3 offset = HMM_MultiplyVec3f(camera->right, velocity);
-//		camera->position = HMM_AddVec3(camera->position, offset);
-//	}
-//}
-
-//hmm_mat4 view_matrix_fp(struct fp_cam* camera) 
-//{
-//	hmm_vec3 target = HMM_AddVec3(camera->position, camera->front);
-//	return HMM_LookAt(camera->position, target, camera->up);
-//}
 
 float lopgl_fov() {
 	return 45.0f;
@@ -202,7 +87,6 @@ hmm_vec3 vegetation[5];
 
 void SceneInit()
 {
-	//_lopgl.fp_enabled = false;
 	_lopgl.first_mouse = true;
 	_lopgl.show_help = false;
 	_lopgl.hide_ui = false;
@@ -408,71 +292,6 @@ void SceneDraw(const World& world)
 		sg_draw(0, 6, 1);
 	}
 }
-
-//static void aim_fp_camera(struct fp_cam* camera, hmm_vec2 mouse_offset) {
-//	camera->yaw += mouse_offset.X * camera->aim_speed;
-//	camera->pitch += mouse_offset.Y * camera->aim_speed;
-//
-//	camera->pitch = HMM_Clamp(camera->min_pitch, camera->pitch, camera->max_pitch);
-//
-//	update_fp_cam_vectors(camera);
-//}
-
-//static void zoom_fp_camera(struct fp_cam* camera, float yoffset) {
-//	camera->zoom -= yoffset * camera->zoom_speed;
-//	camera->zoom = HMM_Clamp(camera->min_zoom, camera->zoom, camera->max_zoom);
-//}
-
-
-//void handle_input_fp(struct fp_cam* camera, const sapp_event* e, hmm_vec2 mouse_offset)
-//{
-//	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
-//		if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
-//			camera->move_forward = true;
-//		}
-//		else if (e->key_code == SAPP_KEYCODE_S || e->key_code == SAPP_KEYCODE_DOWN) {
-//			camera->move_backward = true;
-//		}
-//		else if (e->key_code == SAPP_KEYCODE_A || e->key_code == SAPP_KEYCODE_LEFT) {
-//			camera->move_left = true;
-//		}
-//		else if (e->key_code == SAPP_KEYCODE_D || e->key_code == SAPP_KEYCODE_RIGHT) {
-//			camera->move_right = true;
-//		}
-//	}
-//	else if (e->type == SAPP_EVENTTYPE_KEY_UP) {
-//		if (e->key_code == SAPP_KEYCODE_W || e->key_code == SAPP_KEYCODE_UP) {
-//			camera->move_forward = false;
-//		}
-//		else if (e->key_code == SAPP_KEYCODE_S || e->key_code == SAPP_KEYCODE_DOWN) {
-//			camera->move_backward = false;
-//		}
-//		else if (e->key_code == SAPP_KEYCODE_A || e->key_code == SAPP_KEYCODE_LEFT) {
-//			camera->move_left = false;
-//		}
-//		else if (e->key_code == SAPP_KEYCODE_D || e->key_code == SAPP_KEYCODE_RIGHT) {
-//			camera->move_right = false;
-//		}
-//	}
-//	else if (e->type == SAPP_EVENTTYPE_MOUSE_DOWN) {
-//		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
-//			camera->enable_aim = true;
-//		}
-//	}
-//	else if (e->type == SAPP_EVENTTYPE_MOUSE_UP) {
-//		if (e->mouse_button == SAPP_MOUSEBUTTON_LEFT) {
-//			camera->enable_aim = false;
-//		}
-//	}
-//	else if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
-//		if (camera->enable_aim) {
-//			aim_fp_camera(camera, mouse_offset);
-//		}
-//	}
-//	else if (e->type == SAPP_EVENTTYPE_MOUSE_SCROLL) {
-//		zoom_fp_camera(camera, e->scroll_y);
-//	}
-//}
 
 void SceneInput(World& world, const sapp_event* e) {
 	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {

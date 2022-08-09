@@ -114,6 +114,7 @@ void GameAppInput(const sapp_event* e) noexcept
 	if (e->type == SAPP_EVENTTYPE_RESIZED)
 	{
 		ApplicationState.sceneFrame.Init(sapp_width(), sapp_height());
+		ApplicationState.mainFrame.bind.fs_images[SLOT_diffuse_texture] = ApplicationState.sceneFrame.GetImage();
 	}
 #if EDITOR_ON
 	EditorUpdate(e);
