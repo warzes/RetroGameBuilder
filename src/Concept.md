@@ -31,8 +31,8 @@
 
 Еще смотреть https://answers.unity.com/storage/temp/47016-2.png
 https://img.itch.zone/aW1hZ2UvMTYwNjEwMy85Mzk3OTI1LnBuZw==/original/g0Omgp.png
-
-
+http://protilemapeditor.com/screen/sc5_v2.png
+https://cdn.discordapp.com/attachments/923269427577913386/977459718677213224/20220521_081555.jpg
 
 
 

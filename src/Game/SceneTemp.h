@@ -2,17 +2,6 @@
 
 #include "World.h"
 
-struct _cubemap_request_t
-{
-	sg_image img_id;
-	uint8_t* buffer;
-	int buffer_offset;
-	int fetched_sizes[6];
-	int finished_requests;
-	bool failed;
-	lopgl_fail_callback_t fail_callback;
-};
-
 struct lopgl_state_t
 {
 	bool show_help;
@@ -21,7 +10,6 @@ struct lopgl_state_t
 	hmm_vec2 last_mouse;
 	uint64_t time_stamp;
 	uint64_t frame_time;
-	_cubemap_request_t cubemap_req;
 } _lopgl;
 
 float lopgl_fov() {
