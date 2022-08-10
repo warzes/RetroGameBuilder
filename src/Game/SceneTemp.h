@@ -49,11 +49,11 @@ void renderHelp(const World& world) {
 		sdtx_color4b(0x00, 0xff, 0x00, 0xaf);
 		sdtx_puts("Hide help:\t'H'\n\n");
 		sdtx_printf("Frame Time:\t%.3f\n\n", stm_ms(_lopgl.frame_time));
-		sdtx_printf("Orbital Cam\t[%c]\n", world.GetCameraType() == CameraType::Orbital ? ' ' : '*');
-		sdtx_printf("FP Cam\t\t[%c]\n\n", world.GetCameraType() == CameraType::Free ? '*' : ' ');
+		sdtx_printf("Orbital Cam\t[%c]\n", world.GetCameraManager().GetCameraType() == CameraType::Orbital ? ' ' : '*');
+		sdtx_printf("FP Cam\t\t[%c]\n\n", world.GetCameraManager().GetCameraType() == CameraType::Free ? '*' : ' ');
 		sdtx_puts("Switch Cam:\t'C'\n\n");
 
-		if (world.GetCameraType() == CameraType::Free) {
+		if (world.GetCameraManager().GetCameraType() == CameraType::Free) {
 			sdtx_puts(help_fp());
 		}
 		else {
@@ -222,7 +222,7 @@ void SceneInit()
 
 void SceneDraw(const World& world)
 {
-	hmm_mat4 view = world.GetCameraViewMatrix();
+	hmm_mat4 view = world.GetCameraManager().GetCameraViewMatrix();
 	hmm_mat4 projection = HMM_Perspective(lopgl_fov(), (float)sapp_width() / (float)sapp_height(), 0.1f, 100.0f);
 
 	vs_params_t vs_params = {
@@ -256,7 +256,7 @@ void SceneDraw(const World& world)
 
 	sg_apply_bindings(&bind_transparent);
 
-	hmm_vec3 position = world.GetPosition();
+	hmm_vec3 position = world.GetCameraManager().GetCameraPosition();
 
 	// simple bubble sort algorithm to sort vegetation from furthest to nearest
 	for (int i = 1; i < 5; ++i) {
@@ -284,8 +284,8 @@ void SceneDraw(const World& world)
 void SceneInput(World& world, const sapp_event* e) {
 	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
 		if (e->key_code == SAPP_KEYCODE_C) {
-			if (world.GetCameraType() == CameraType::Free) world.SetCameraType(CameraType::Orbital);
-			else world.SetCameraType(CameraType::Free);
+			if (world.GetCameraManager().GetCameraType() == CameraType::Free) world.GetCameraManager().SetCameraType(CameraType::Orbital);
+			else world.GetCameraManager().SetCameraType(CameraType::Free);
 		}
 		else if (e->key_code == SAPP_KEYCODE_H) {
 			_lopgl.show_help = !_lopgl.show_help;

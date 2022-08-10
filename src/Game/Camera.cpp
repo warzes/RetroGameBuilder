@@ -123,8 +123,6 @@ void OrbitalCamera::zoom(float val)
 	distance = HMM_Clamp(new_dist, min_dist, max_dist);
 }
 //-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
 void FreeCamera::Set(const FreeCameraDesc& desc)
 {
 	// camera attributes
@@ -132,7 +130,7 @@ void FreeCamera::Set(const FreeCameraDesc& desc)
 	world_up = desc.world_up;
 	yaw = desc.yaw;
 	pitch = desc.pitch;
-	zoom = desc.zoom;
+	m_zoom = desc.zoom;
 	// limits
 	min_pitch = desc.min_pitch;
 	max_pitch = desc.max_pitch;
@@ -173,7 +171,7 @@ void FreeCamera::Update(float delta_time)
 	}
 }
 //-----------------------------------------------------------------------------
-void FreeCamera::Move(hmm_vec2 mouse_offset)
+void FreeCamera::move(hmm_vec2 mouse_offset)
 {
 	yaw += mouse_offset.X * aim_speed;
 	pitch += mouse_offset.Y * aim_speed;
@@ -183,10 +181,10 @@ void FreeCamera::Move(hmm_vec2 mouse_offset)
 	updateVectors();
 }
 //-----------------------------------------------------------------------------
-void FreeCamera::Zoom(float yoffset)
+void FreeCamera::zoom(float yoffset)
 {
-	zoom -= yoffset * zoom_speed;
-	zoom = HMM_Clamp(min_zoom, zoom, max_zoom);
+	m_zoom -= yoffset * zoom_speed;
+	m_zoom = HMM_Clamp(min_zoom, m_zoom, max_zoom);
 }
 //-----------------------------------------------------------------------------
 void FreeCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
@@ -231,11 +229,11 @@ void FreeCamera::Input(const sapp_event* e, hmm_vec2 mouse_offset)
 	}
 	else if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
 		if (enable_aim) {
-			Move(mouse_offset);
+			move(mouse_offset);
 		}
 	}
 	else if (e->type == SAPP_EVENTTYPE_MOUSE_SCROLL) {
-		Zoom(e->scroll_y);
+		zoom(e->scroll_y);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -253,5 +251,37 @@ void FreeCamera::updateVectors()
 	// Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	right = HMM_NormalizeVec3(HMM_Cross(front, world_up));
 	up = HMM_NormalizeVec3(HMM_Cross(right, front));
+}
+//-----------------------------------------------------------------------------
+void CameraManager::Init()
+{
+	m_orbitalCamera.Set({
+		.target = {0.0f, 0.0f, 0.0f},
+		.up = {0.0f, 1.0f, 0.0f},
+		.pitch = 0.f,
+		.heading = 0.f,
+		.distance = 6.f,
+		.min_pitch = -89.f,
+		.max_pitch = 89.f,
+		.min_dist = 1.f,
+		.max_dist = 10.f,
+		.rotate_speed = 1.f,
+		.zoom_speed = .5f,
+		});
+
+	m_freeCamera.Set({
+		.position = {0.0f, 0.0f, 6.0f},
+		.world_up = {0.0f, 1.0f, 0.0f},
+		.yaw = -90.f,
+		.pitch = 0.f,
+		.zoom = 45.f,
+		.min_pitch = -89.f,
+		.max_pitch = 89.f,
+		.min_zoom = 1.f,
+		.max_zoom = 45.f,
+		.movement_speed = 0.005f,
+		.aim_speed = 1.f,
+		.zoom_speed = .1f,
+		});
 }
 //-----------------------------------------------------------------------------

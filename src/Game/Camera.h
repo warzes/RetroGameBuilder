@@ -78,11 +78,7 @@ class FreeCamera
 {
 public:
 	void Set(const FreeCameraDesc& desc);
-
 	void Update(float delta_time);
-
-	void Move(hmm_vec2 mouse_offset); // TODO: rename
-	void Zoom(float yoffset);
 	void Input(const sapp_event* e, hmm_vec2 mouse_offset);
 
 	hmm_mat4 GetViewMatrix() const 
@@ -97,7 +93,7 @@ public:
 	hmm_vec3 world_up;
 	float yaw;
 	float pitch;
-	float zoom;
+	float m_zoom;
 	// limits
 	float min_pitch;
 	float max_pitch;
@@ -120,4 +116,54 @@ public:
 
 private:
 	void updateVectors();
+	void move(hmm_vec2 mouse_offset); // TODO: rename
+	void zoom(float yoffset);
+};
+
+class CameraManager
+{
+public:
+	void Init();
+
+	void SetCameraType(CameraType type) 
+	{
+		if (type == m_cameraType) return;
+		m_cameraType = type; 
+		
+	}
+	CameraType GetCameraType() const { return m_cameraType; }
+
+	hmm_mat4 GetCameraViewMatrix() const
+	{
+		if (m_cameraType == CameraType::Orbital) return m_orbitalCamera.GetViewMatrix();
+		else if (m_cameraType == CameraType::Free) return m_freeCamera.GetViewMatrix();
+		else {};
+	}
+	hmm_vec3 GetCameraPosition() const
+	{
+		if (m_cameraType == CameraType::Orbital) return m_orbitalCamera.GetPosition();
+		else if (m_cameraType == CameraType::Free) return m_freeCamera.GetPosition();
+		else {};
+	}
+
+	void Input(const sapp_event* e, hmm_vec2 mouse_offset)
+	{
+		if (m_cameraType == CameraType::Orbital) m_orbitalCamera.Input(e, mouse_offset);
+		else if (m_cameraType == CameraType::Free) m_freeCamera.Input(e, mouse_offset);
+		else {};
+
+
+	}
+
+	void Update(float delta_time)
+	{
+		if (m_cameraType == CameraType::Orbital);
+		else if (m_cameraType == CameraType::Free) m_freeCamera.Update(delta_time);
+		else {};
+	}
+
+private:
+	CameraType m_cameraType = CameraType::Free;
+	OrbitalCamera m_orbitalCamera;
+	FreeCamera m_freeCamera;
 };

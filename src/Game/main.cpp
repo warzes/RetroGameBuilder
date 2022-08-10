@@ -88,7 +88,7 @@ void GameAppFrame() noexcept
 
 	_lopgl.frame_time = stm_laptime(&_lopgl.time_stamp);
 
-	world.UpdateCamera(stm_ms(_lopgl.frame_time));
+	world.Update(stm_ms(_lopgl.frame_time));
 
 	ApplicationState.sceneFrame.SetFrame();
 	SceneDraw(world);

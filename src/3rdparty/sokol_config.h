@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 /*
-Commits on Aug 8, 2022
-	start tinkering with static analysis test scripts
+Commits on Aug 10, 2022
+add a static analyzer helper script for Windows (clang --analyze based)
 */
 
 #define SOKOL_WIN32_FORCE_MAIN
@@ -13,6 +13,5 @@ Commits on Aug 8, 2022
 //#define SOKOL_D3D11
 //#define SOKOL_METAL
 //#define SOKOL_WGPU
-
 
 #define SOKOL_LOG(s) { puts(s); }
