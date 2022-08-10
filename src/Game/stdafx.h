@@ -21,6 +21,9 @@
 #	include <3rdparty/sokol_imgui.h>
 #endif
 
+#include <string>
+#include <vector>
+
 #if defined(_MSC_VER)
 #	pragma warning(pop)
 #endif

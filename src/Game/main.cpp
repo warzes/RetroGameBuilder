@@ -84,14 +84,15 @@ void GameAppInit() noexcept
 //-----------------------------------------------------------------------------
 void GameAppFrame() noexcept
 {
+	// update
 	sfetch_dowork();
-
 	_lopgl.frame_time = stm_laptime(&_lopgl.time_stamp);
-
 	world.Update(stm_ms(_lopgl.frame_time));
 
+	// render game scene
 	ApplicationState.sceneFrame.SetFrame();
 	SceneDraw(world);
+	world.Draw();
 	sg_end_pass();
 
 	// render main screen
@@ -120,7 +121,45 @@ void GameAppInput(const sapp_event* e) noexcept
 	EditorUpdate(e);
 #endif
 
-	SceneInput(world, e);
+	if (e->type == SAPP_EVENTTYPE_KEY_DOWN)
+	{
+		if (e->key_code == SAPP_KEYCODE_C)
+		{
+			if (world.GetCameraManager().GetCameraType() == CameraType::Free) world.GetCameraManager().SetCameraType(CameraType::Orbital);
+			else world.GetCameraManager().SetCameraType(CameraType::Free);
+		}
+		else if (e->key_code == SAPP_KEYCODE_H)
+		{
+			_lopgl.show_help = !_lopgl.show_help;
+		}
+		else if (e->key_code == SAPP_KEYCODE_U)
+		{
+			_lopgl.hide_ui = !_lopgl.hide_ui;
+		}
+		else if (e->key_code == SAPP_KEYCODE_ESCAPE)
+		{
+			sapp_request_quit();
+		}
+	}
+
+	hmm_vec2 mouseOffset = { 0.0f, 0.0f };
+	if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE)
+	{
+		if (!_lopgl.first_mouse)
+		{
+			mouseOffset.X = e->mouse_x - _lopgl.last_mouse.X;
+			mouseOffset.Y = _lopgl.last_mouse.Y - e->mouse_y;
+		}
+		else
+		{
+			_lopgl.first_mouse = false;
+		}
+
+		_lopgl.last_mouse.X = e->mouse_x;
+		_lopgl.last_mouse.Y = e->mouse_y;
+	}
+
+	world.Input(e, mouseOffset);
 }
 //-----------------------------------------------------------------------------
 void GameAppClose() noexcept
@@ -130,6 +169,7 @@ void GameAppClose() noexcept
 #if EDITOR_ON
 	EditorClose();
 #endif
+	world.Close();
 	sg_shutdown();
 }
 //-----------------------------------------------------------------------------

@@ -1183,7 +1183,7 @@ inline const sg_shader_desc* display_shader_desc(sg_backend backend) {
 #endif /* SOKOL_WGPU */
     return 0;
 }
-static inline const sg_shader_desc* offscreen_shader_desc(sg_backend backend) {
+inline const sg_shader_desc* offscreen_shader_desc(sg_backend backend) {
 #if defined(SOKOL_GLCORE33)
     if (backend == SG_BACKEND_GLCORE33) {
         static sg_shader_desc desc;

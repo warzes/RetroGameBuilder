@@ -2,6 +2,8 @@
 
 #include "World.h"
 
+#define TEST_SCENE 0
+
 struct lopgl_state_t
 {
 	bool show_help;
@@ -66,12 +68,14 @@ void renderHelp(const World& world) {
 	sdtx_draw();
 }
 
+#if TEST_SCENE
 sg_pipeline pip;
 sg_bindings bind_cube;
 sg_bindings bind_plane;
 sg_bindings bind_transparent;
 uint8_t file_buffer[2 * 1024 * 1024];
 hmm_vec3 vegetation[5];
+#endif
 
 void SceneInit()
 {
@@ -79,6 +83,7 @@ void SceneInit()
 	_lopgl.show_help = false;
 	_lopgl.hide_ui = false;
 
+#if TEST_SCENE
 	constexpr float cube_vertices[] = {
 		// positions          // texture Coords
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -182,7 +187,6 @@ void SceneInit()
 	sg_image grass_img_id = sg_alloc_image();
 	bind_transparent.fs_images[SLOT_diffuse_texture] = grass_img_id;
 
-
 	lopgl_image_request_t imageDesc1 = {
 		.path = "../CoreData/textures/metal.png",
 		.img_id = metal_img_id,
@@ -218,6 +222,8 @@ void SceneInit()
 	vegetation[2] = HMM_Vec3(0.0f, 0.0f, 0.7f);
 	vegetation[3] = HMM_Vec3(-0.3f, 0.0f, -2.3f);
 	vegetation[4] = HMM_Vec3(0.5f, 0.0f, -0.6f);
+
+#endif
 }
 
 void SceneDraw(const World& world)
@@ -225,11 +231,13 @@ void SceneDraw(const World& world)
 	hmm_mat4 view = world.GetCameraManager().GetCameraViewMatrix();
 	hmm_mat4 projection = HMM_Perspective(lopgl_fov(), (float)sapp_width() / (float)sapp_height(), 0.1f, 100.0f);
 
-	vs_params_t vs_params = {
-	.view = view,
-	.projection = projection
+	vs_params_t vs_params = 
+	{
+		.view = view,
+		.projection = projection
 	};
 
+#if TEST_SCENE
 	/* the offscreen pass, rendering an rotating, untextured cube into a render target image */
 
 	sg_apply_pipeline(pip);
@@ -259,12 +267,15 @@ void SceneDraw(const World& world)
 	hmm_vec3 position = world.GetCameraManager().GetCameraPosition();
 
 	// simple bubble sort algorithm to sort vegetation from furthest to nearest
-	for (int i = 1; i < 5; ++i) {
-		for (int j = i - 1; j >= 0; --j) {
+	for (int i = 1; i < 5; ++i) 
+	{
+		for (int j = i - 1; j >= 0; --j)
+		{
 			hmm_vec3 translate0 = HMM_SubtractVec3(vegetation[j], position);
 			hmm_vec3 translate1 = HMM_SubtractVec3(vegetation[j + 1], position);
 
-			if (HMM_LengthSquaredVec3(translate0) < HMM_LengthSquaredVec3(translate1)) {
+			if (HMM_LengthSquaredVec3(translate0) < HMM_LengthSquaredVec3(translate1))
+			{
 				hmm_vec3 temp = vegetation[j];
 				vegetation[j] = vegetation[j + 1];
 				vegetation[j + 1] = temp;
@@ -273,45 +284,12 @@ void SceneDraw(const World& world)
 		}
 	}
 
-	for (size_t i = 0; i < 5; i++) {
+	for (size_t i = 0; i < 5; i++) 
+	{
 		vs_params.model = HMM_Translate(vegetation[i]);
 		r1 = { &vs_params, sizeof(vs_params_t) };
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &r1);
 		sg_draw(0, 6, 1);
 	}
-}
-
-void SceneInput(World& world, const sapp_event* e) {
-	if (e->type == SAPP_EVENTTYPE_KEY_DOWN) {
-		if (e->key_code == SAPP_KEYCODE_C) {
-			if (world.GetCameraManager().GetCameraType() == CameraType::Free) world.GetCameraManager().SetCameraType(CameraType::Orbital);
-			else world.GetCameraManager().SetCameraType(CameraType::Free);
-		}
-		else if (e->key_code == SAPP_KEYCODE_H) {
-			_lopgl.show_help = !_lopgl.show_help;
-		}
-		else if (e->key_code == SAPP_KEYCODE_U) {
-			_lopgl.hide_ui = !_lopgl.hide_ui;
-		}
-		else if (e->key_code == SAPP_KEYCODE_ESCAPE) {
-			sapp_request_quit();
-		}
-	}
-
-	hmm_vec2 mouse_offset = HMM_Vec2(0.0f, 0.0f);
-
-	if (e->type == SAPP_EVENTTYPE_MOUSE_MOVE) {
-		if (!_lopgl.first_mouse) {
-			mouse_offset.X = e->mouse_x - _lopgl.last_mouse.X;
-			mouse_offset.Y = _lopgl.last_mouse.Y - e->mouse_y;
-		}
-		else {
-			_lopgl.first_mouse = false;
-		}
-
-		_lopgl.last_mouse.X = e->mouse_x;
-		_lopgl.last_mouse.Y = e->mouse_y;
-	}
-
-	world.Input(e, mouse_offset);
+#endif
 }

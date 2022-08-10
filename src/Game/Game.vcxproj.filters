@@ -9,6 +9,12 @@
     <ClCompile Include="Camera.cpp">
       <Filter>World</Filter>
     </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -31,6 +37,12 @@
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
       <Filter>World</Filter>
     </ClInclude>
   </ItemGroup>

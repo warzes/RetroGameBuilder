@@ -270,7 +270,7 @@ void CameraManager::Init()
 		});
 
 	m_freeCamera.Set({
-		.position = {0.0f, 0.0f, 6.0f},
+		.position = {0.0f, .0f, 2.0f},
 		.world_up = {0.0f, 1.0f, 0.0f},
 		.yaw = -90.f,
 		.pitch = 0.f,
