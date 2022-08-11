@@ -48,7 +48,7 @@ private:
 	void createVertexBuffer(const HeightTile& heightTop, const HeightTile& heightBottom);
 
 	PartTileSide m_side;
-	sg_bindings m_bind = {};
+	sg_buffer m_buffer = { 0 };
 };
 
 class Tile
@@ -59,8 +59,15 @@ public:
 
 	void SetHeights(const HeightTile& heightTop, const HeightTile& heightBottom);
 
-	void UpdateGeometry();
 	void Draw();
+
+	void VisibleTop(bool visible);
+	void VisibleBottom(bool visible);
+	void VisibleForward(bool visible);
+	void VisibleBack(bool visible);
+	void VisibleLeft(bool visible);
+	void VisibleRight(bool visible);
+	void VisibleFull(bool visible);
 
 private:
 	PartTile m_top = PartTile(PartTileSide::Top);
@@ -70,6 +77,10 @@ private:
 	PartTile m_left = PartTile(PartTileSide::Left);
 	PartTile m_right = PartTile(PartTileSide::Right);
 
-	HeightTile m_heightTop = {0.0f, 0.0f, 0.0f, 0.0f};
-	HeightTile m_heightBottom = { 0.0f, 0.0f, 0.0f, 0.0f };
+	bool m_topVisible = true;
+	bool m_bottomVisible = true;
+	bool m_forwardVisible = true;
+	bool m_backVisible = true;
+	bool m_leftVisible = true;
+	bool m_rightVisible = true;
 };

@@ -61,7 +61,9 @@ sg_context_desc sapp_sgcontext() noexcept
 //-----------------------------------------------------------------------------
 void GameAppInit() noexcept
 {
-	const sg_desc desc = { .context = sapp_sgcontext() };
+	sg_desc desc = { .context = sapp_sgcontext() };	
+	desc.buffer_pool_size = 65000;
+
 	sg_setup(&desc);
 	stm_setup();
 	sdtx_desc_t debugDesc = { 0 };

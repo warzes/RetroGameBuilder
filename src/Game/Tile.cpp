@@ -64,6 +64,12 @@ constexpr uint16_t indexBuf[] =
 // index buffer один на всех
 static sg_buffer indexBuffer = { 0 };
 static int32_t numberIndexBuffer = 0;
+
+// TODO: пока одна текстура
+static sg_image img_id = { 0 };
+static int32_t numberImg = 0;
+
+static sg_bindings bindRes = {};
 //-----------------------------------------------------------------------------
 void PartTile::Init()
 {
@@ -77,30 +83,35 @@ void PartTile::Init()
 		indexBuffer = sg_make_buffer(&indexBufferDesc);
 	}
 	numberIndexBuffer++;
-	m_bind.index_buffer = indexBuffer;
 
-	sg_image metal_img_id = sg_alloc_image();
-	m_bind.fs_images[SLOT_diffuse_texture] = metal_img_id;
-	lopgl_image_request_t imageDesc1 = {
-		.path = "../CoreData/textures/1mx1m.png",
-		.img_id = metal_img_id,
-		.buffer_ptr = file_buffer,
-		.buffer_size = sizeof(file_buffer),
-		.fail_callback = failCallback
-	};
-	lopgl_load_image(&imageDesc1);
+	if (img_id.id == 0 || numberImg < 1)
+	{
+		img_id = sg_alloc_image();
+		lopgl_image_request_t imageDesc1 = {
+			.path = "../CoreData/textures/1mx1m.png",
+			.img_id = img_id,
+			.buffer_ptr = file_buffer,
+			.buffer_size = sizeof(file_buffer),
+			.fail_callback = failCallback
+		};
+		lopgl_load_image(&imageDesc1);
+	}
+	numberImg++;
 }
 //-----------------------------------------------------------------------------
 void PartTile::Close()
 {
-	if (m_bind.vertex_buffers[0].id == 0) return;
+	if (m_buffer.id == 0) return;
 
-	sg_destroy_buffer(m_bind.vertex_buffers[0]);
+	sg_destroy_buffer(m_buffer);
+	
 	numberIndexBuffer--;
 	if (numberIndexBuffer<1)
 		sg_destroy_buffer(indexBuffer);
 
-	sg_destroy_image(m_bind.fs_images[SLOT_diffuse_texture]);	
+	numberImg--;
+	if (numberImg < 1)
+		sg_destroy_image(img_id);
 }
 //-----------------------------------------------------------------------------
 void PartTile::UpdateGeometry(const HeightTile& heightTop, const HeightTile& heightBottom)
@@ -114,8 +125,6 @@ void PartTile::UpdateGeometry(const HeightTile& heightTop, const HeightTile& hei
 			vert[i] = topVertices[i];
 			vert[i].pos.Y -= heightTop[i];
 		}
-
-
 	}
 	else if (m_side == PartTileSide::Bottom)
 	{
@@ -186,21 +195,23 @@ void PartTile::UpdateGeometry(const HeightTile& heightTop, const HeightTile& hei
 		vert[3].texCoord.V -= heightBottom[3];
 	}
 
-	sg_update_buffer(m_bind.vertex_buffers[0], SG_RANGE(vert));
+	sg_update_buffer(m_buffer, SG_RANGE(vert));
 }
 //-----------------------------------------------------------------------------
 void PartTile::Draw()
 {
-	sg_apply_bindings(&m_bind);
+	bindRes.vertex_buffers[0] = m_buffer;
+	bindRes.index_buffer = indexBuffer;
+	bindRes.fs_images[SLOT_diffuse_texture] = img_id;
+
+	sg_apply_bindings(&bindRes);
 	sg_draw(0, 6, 1);
 }
 //-----------------------------------------------------------------------------
 void PartTile::createVertexBuffer(const HeightTile& heightTop, const HeightTile& heightBottom)
 {
 	sg_buffer_desc vertexBufferDesc = { .size = sizeof(TileVertex)*4, .type = SG_BUFFERTYPE_VERTEXBUFFER, .usage = SG_USAGE_DYNAMIC};
-	sg_buffer buffer = sg_make_buffer(&vertexBufferDesc);
-	m_bind.vertex_buffers[0] = buffer;
-	//planeBufferDesc.data = SG_RANGE(vert);
+	m_buffer = sg_make_buffer(&vertexBufferDesc);
 	UpdateGeometry(heightTop, heightBottom);
 }
 //-----------------------------------------------------------------------------
@@ -226,28 +237,61 @@ void Tile::Close()
 //-----------------------------------------------------------------------------
 void Tile::SetHeights(const HeightTile& heightTop, const HeightTile& heightBottom)
 {
-	m_heightTop = heightTop;
-	m_heightBottom = heightBottom;
-	UpdateGeometry();
-}
-//-----------------------------------------------------------------------------
-void Tile::UpdateGeometry()
-{
-	m_top.UpdateGeometry(m_heightTop, m_heightBottom);
-	m_bottom.UpdateGeometry(m_heightTop, m_heightBottom);
-	m_forward.UpdateGeometry(m_heightTop, m_heightBottom);
-	m_back.UpdateGeometry(m_heightTop, m_heightBottom);
-	m_left.UpdateGeometry(m_heightTop, m_heightBottom);
-	m_right.UpdateGeometry(m_heightTop, m_heightBottom);
+	m_top.UpdateGeometry(heightTop, heightBottom);
+	m_bottom.UpdateGeometry(heightTop, heightBottom);
+	m_forward.UpdateGeometry(heightTop, heightBottom);
+	m_back.UpdateGeometry(heightTop, heightBottom);
+	m_left.UpdateGeometry(heightTop, heightBottom);
+	m_right.UpdateGeometry(heightTop, heightBottom);
 }
 //-----------------------------------------------------------------------------
 void Tile::Draw()
 {
-	m_top.Draw();
-	m_bottom.Draw();
-	m_forward.Draw();
-	m_back.Draw();
-	m_left.Draw();
-	m_right.Draw();
+	if (m_topVisible)     m_top.Draw();
+	if (m_bottomVisible)  m_bottom.Draw();
+	if (m_forwardVisible) m_forward.Draw();
+	if (m_backVisible)    m_back.Draw();
+	if (m_leftVisible)    m_left.Draw();
+	if (m_rightVisible)   m_right.Draw();
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleTop(bool visible)
+{
+	m_topVisible = visible;
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleBottom(bool visible)
+{
+	m_bottomVisible = visible;
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleForward(bool visible)
+{
+	m_forwardVisible = visible;
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleBack(bool visible)
+{
+	m_backVisible = visible;
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleLeft(bool visible)
+{
+	m_leftVisible = visible;
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleRight(bool visible)
+{
+	m_rightVisible = visible;
+}
+//-----------------------------------------------------------------------------
+void Tile::VisibleFull(bool visible)
+{
+	m_topVisible = visible;
+	m_bottomVisible = visible;
+	m_forwardVisible = visible;
+	m_backVisible = visible;
+	m_leftVisible = visible;
+	m_rightVisible = visible;
 }
 //-----------------------------------------------------------------------------

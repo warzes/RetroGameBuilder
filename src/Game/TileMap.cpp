@@ -30,71 +30,80 @@ void TileMap::Init()
 
 	pip = sg_make_pipeline(&offscreenPipeDesc);	
 
-	m_tile.Init();
+	//m_tile.Init();
+
+
+	m_tiles = new TileLayout[3];
+	puts(std::to_string(sizeof(Tile) * 3 * SizeMap * SizeMap /1024/1024).c_str());
+
+	m_tiles[0].Init();
+	m_tiles[1].Init();
+	m_tiles[2].Init();
+
 }
 //-----------------------------------------------------------------------------
 void TileMap::Close()
 {
-	m_tile.Close();
+	//m_tile.Close();
+	m_tiles[0].Close();
+	m_tiles[1].Close();
+	m_tiles[2].Close();
 }
 //-----------------------------------------------------------------------------
 void TileMap::Update(float deltaTime)
 {
-	static int currentFrame = 0;
-	const int MAX_FRAMES_IN_FLIGHT = 2;
-	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+	//static int currentFrame = 0;
+	//const int MAX_FRAMES_IN_FLIGHT = 2;
+	//currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 
-	static bool first = true;
-	if (first == true)
-	{
-		first = false;
-		return;
-	}
+	//static bool first = true;
+	//if (first == true)
+	//{
+	//	first = false;
+	//	return;
+	//}
 
-	static float ttt1 = 0;
-	static float ttt2 = 0;
-	static float ttt3 = 0;
-	static float ttt4 = 0;
-	static bool reverse = false;
+	//static float ttt1 = 0;
+	//static float ttt2 = 0;
+	//static float ttt3 = 0;
+	//static float ttt4 = 0;
+	//static bool reverse = false;
 
-	if (!reverse)
-	{
-		ttt1 += rand() % 100 / 10000.0f;
-		ttt2 = ttt1;
-		//ttt2 += rand() % 100 / 10000.0f;
-		//ttt3 += rand() % 100 / 10000.0f;
-		//ttt4 += rand() % 100 / 10000.0f;
+	//if (!reverse)
+	//{
+	//	ttt1 += rand() % 100 / 10000.0f;
+	//	ttt2 = ttt1;
+	//	//ttt2 += rand() % 100 / 10000.0f;
+	//	//ttt3 += rand() % 100 / 10000.0f;
+	//	//ttt4 += rand() % 100 / 10000.0f;
 
-		HeightTile heightTop = { ttt1, ttt2, ttt3, ttt4 };
-		HeightTile heightBottom = { 0.1, 0.2, 0.3, 0.4 };
-		m_tile.SetHeights(heightTop, heightBottom);
+	//	HeightTile heightTop = { ttt1, ttt2, ttt3, ttt4 };
+	//	HeightTile heightBottom = { 0.1, 0.2, 0.3, 0.4 };
+	//	//m_tile.SetHeights(heightTop, heightBottom);
 
-		if (ttt1 > 0.5f || ttt2 > 0.5f || ttt3 > 0.5f || ttt4 > 0.5f)
-		{
-			reverse = true;
-		}
-	}
-	else
-	{
-		ttt1 -= rand() % 100 / 10000.0f;
-		ttt2 = ttt1;
-		//ttt2 -= rand() % 100 / 10000.0f;
-		//ttt3 -= rand() % 100 / 10000.0f;
-		//ttt4 -= rand() % 100 / 10000.0f;
-
-
-		HeightTile heightTop = { ttt1, ttt2, ttt3, ttt4 };
-		HeightTile heightBottom = { 0.1, 0.2, 0.3, 0.4 };
-		m_tile.SetHeights(heightTop, heightBottom);
-
-		if (ttt1 < 0.0f || ttt2 < 0.0f || ttt3 < 0.0f || ttt4 < 0.0f)
-		{
-			reverse = false;
-		}
-	}
+	//	if (ttt1 > 0.5f || ttt2 > 0.5f || ttt3 > 0.5f || ttt4 > 0.5f)
+	//	{
+	//		reverse = true;
+	//	}
+	//}
+	//else
+	//{
+	//	ttt1 -= rand() % 100 / 10000.0f;
+	//	ttt2 = ttt1;
+	//	//ttt2 -= rand() % 100 / 10000.0f;
+	//	//ttt3 -= rand() % 100 / 10000.0f;
+	//	//ttt4 -= rand() % 100 / 10000.0f;
 
 
-	//sg_update_buffer(bind_plane.vertex_buffers[0], SG_RANGE(planeVertices));
+	//	HeightTile heightTop = { ttt1, ttt2, ttt3, ttt4 };
+	//	HeightTile heightBottom = { 0.1, 0.2, 0.3, 0.4 };
+	//	//m_tile.SetHeights(heightTop, heightBottom);
+
+	//	if (ttt1 < 0.0f || ttt2 < 0.0f || ttt3 < 0.0f || ttt4 < 0.0f)
+	//	{
+	//		reverse = false;
+	//	}
+	//}
 }
 //-----------------------------------------------------------------------------
 void TileMap::Draw(const World& world)
@@ -104,15 +113,27 @@ void TileMap::Draw(const World& world)
 	hmm_mat4 view = world.GetCameraManager().GetCameraViewMatrix();
 	hmm_mat4 projection = HMM_Perspective(45.0f, (float)sapp_width() / (float)sapp_height(), 0.1f, 1000.0f);
 
-	vs_params_t vs_params =
+	hmm_vec3 pos = { 0 };
+	for (int x = 0; x < SizeMap; x++)
 	{
-		.model = HMM_Mat4d(1.0f),
-		.view = view,
-		.projection = projection
-	};
-	sg_range rangeData = { &vs_params, sizeof(vs_params_t) };
-	sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &rangeData);
+		for (int y = 0; y < SizeMap; y++)
+		{
+			pos.X = x;
+			pos.Z = y;
 
-	m_tile.Draw();
+			vs_params_t vs_params =
+			{
+				.model = HMM_Translate(pos),
+				.view = view,
+				.projection = projection
+			};
+			sg_range rangeData = { &vs_params, sizeof(vs_params_t) };
+			sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &rangeData);
+
+			m_tiles[0].tiles[x][y].Draw();
+		}
+	}
+
+	//m_tile.Draw();
 }
 //-----------------------------------------------------------------------------
