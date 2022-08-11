@@ -33,9 +33,13 @@ public:
 	void Init();
 	void Close();
 
+	void Update(bool staticBuf = false);
+
 	void Draw();
 
 private:
+	void createVertexBuffer();
+
 	PartTileSide m_side;
 	sg_bindings m_bind = {};
 };
@@ -46,8 +50,10 @@ public:
 	void Init();
 	void Close();
 
+	void Update();
 	void Draw();
 
+private:
 	PartTile m_top = PartTile(PartTileSide::Top);
 	PartTile m_bottom = PartTile(PartTileSide::Bottom);
 	PartTile m_forward = PartTile(PartTileSide::Forward);
