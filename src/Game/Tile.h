@@ -19,9 +19,16 @@ enum class PartTileSide
 	Right
 };
 
-struct Rect
+// дальний левый/дальний правый/ближний левый/ближний правый
+struct HeightTile
 {
-	float r1, r2, r3, r4;
+	float& operator[](size_t i) { return (&bl)[i]; }
+	const float operator[](size_t i) const { return (&bl)[i]; }
+
+	float bl = 0.0f;
+	float br = 0.0f;
+	float fl = 0.0f;
+	float fr = 0.0f;
 };
 
 // часть тайла
@@ -33,12 +40,12 @@ public:
 	void Init();
 	void Close();
 
-	void Update(bool staticBuf = false);
+	void UpdateGeometry(const HeightTile& heightTop, const HeightTile& heightBottom);
 
 	void Draw();
 
 private:
-	void createVertexBuffer();
+	void createVertexBuffer(const HeightTile& heightTop, const HeightTile& heightBottom);
 
 	PartTileSide m_side;
 	sg_bindings m_bind = {};
@@ -50,7 +57,9 @@ public:
 	void Init();
 	void Close();
 
-	void Update();
+	void SetHeights(const HeightTile& heightTop, const HeightTile& heightBottom);
+
+	void UpdateGeometry();
 	void Draw();
 
 private:
@@ -60,4 +69,7 @@ private:
 	PartTile m_back = PartTile(PartTileSide::Back);
 	PartTile m_left = PartTile(PartTileSide::Left);
 	PartTile m_right = PartTile(PartTileSide::Right);
+
+	HeightTile m_heightTop = {0.0f, 0.0f, 0.0f, 0.0f};
+	HeightTile m_heightBottom = { 0.0f, 0.0f, 0.0f, 0.0f };
 };

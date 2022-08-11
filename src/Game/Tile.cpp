@@ -68,7 +68,7 @@ void PartTile::Init()
 {
 	Close();
 
-	createVertexBuffer();
+	createVertexBuffer({ 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f });
 	
 	if (indexBuffer.id == 0 || numberIndexBuffer < 1)
 	{
@@ -102,98 +102,88 @@ void PartTile::Close()
 	sg_destroy_image(m_bind.fs_images[SLOT_diffuse_texture]);	
 }
 //-----------------------------------------------------------------------------
-void PartTile::Update(bool staticBuf)
+void PartTile::UpdateGeometry(const HeightTile& heightTop, const HeightTile& heightBottom)
 {
-	if (staticBuf)
+	TileVertex vert[4];
+
+	if (m_side == PartTileSide::Top)
 	{
-		Init();
+		for (int i = 0; i < 4; i++)
+		{
+			vert[i] = topVertices[i];
+			vert[i].pos.Y -= heightTop[i];
+		}
 	}
-	else
+	else if (m_side == PartTileSide::Bottom)
 	{
-		// дальний левый/дальний правый/ближний левый/ближний правый
-		float top[4] = { 0.4, 0.3, 0.2, 0.1 };
-		float bottom[4] = { 0.1, 0.2, 0.3, 0.4 };
-		TileVertex vert[4];
-
-		if (m_side == PartTileSide::Top)
+		for (int i = 0; i < 4; i++)
 		{
-			for (int i = 0; i < 4; i++)
-			{
-				vert[i] = topVertices[i];
-				vert[i].pos.Y -= top[i];
-			}
+			vert[i] = bottomVertices[i];
+			vert[i].pos.Y += heightBottom[i];
 		}
-		else if (m_side == PartTileSide::Bottom)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				vert[i] = bottomVertices[i];
-				vert[i].pos.Y += bottom[i];
-			}
-		}
-		else if (m_side == PartTileSide::Forward)
-		{
-			for (int i = 0; i < 4; i++)
-				vert[i] = forwardVertices[i];
-
-			vert[0].pos.Y -= top[2];
-			vert[1].pos.Y -= top[3];
-			vert[0].texCoord.V += top[2];
-			vert[1].texCoord.V += top[3];
-
-			vert[2].pos.Y += bottom[2];
-			vert[3].pos.Y += bottom[3];
-			vert[2].texCoord.V -= bottom[2];
-			vert[3].texCoord.V -= bottom[3];
-		}
-		else if (m_side == PartTileSide::Back)
-		{
-			for (int i = 0; i < 4; i++)
-				vert[i] = backVertices[i];
-
-			vert[0].pos.Y -= top[0];
-			vert[1].pos.Y -= top[1];
-			vert[0].texCoord.V += top[0];
-			vert[1].texCoord.V += top[1];
-
-			vert[2].pos.Y += bottom[0];
-			vert[3].pos.Y += bottom[1];
-			vert[2].texCoord.V -= bottom[0];
-			vert[3].texCoord.V -= bottom[1];
-		}
-		else if (m_side == PartTileSide::Left)
-		{
-			for (int i = 0; i < 4; i++)
-				vert[i] = leftVertices[i];
-
-			vert[0].pos.Y -= top[0];
-			vert[2].pos.Y -= top[2];
-			vert[0].texCoord.V += top[0];
-			vert[2].texCoord.V += top[2];
-
-			vert[1].pos.Y += bottom[0];
-			vert[3].pos.Y += bottom[2];
-			vert[1].texCoord.V -= bottom[0];
-			vert[3].texCoord.V -= bottom[2];
-		}
-		else if (m_side == PartTileSide::Right)
-		{
-			for (int i = 0; i < 4; i++)
-				vert[i] = rightVertices[i];
-
-			vert[0].pos.Y -= top[1];
-			vert[2].pos.Y -= top[3];
-			vert[0].texCoord.V += top[1];
-			vert[2].texCoord.V += top[3];
-
-			vert[1].pos.Y += bottom[1];
-			vert[3].pos.Y += bottom[3];
-			vert[1].texCoord.V -= bottom[1];
-			vert[3].texCoord.V -= bottom[3];
-		}
-
-		sg_update_buffer(m_bind.vertex_buffers[0], SG_RANGE(vert));
 	}
+	else if (m_side == PartTileSide::Forward)
+	{
+		for (int i = 0; i < 4; i++)
+			vert[i] = forwardVertices[i];
+
+		vert[0].pos.Y -= heightTop[2];
+		vert[1].pos.Y -= heightTop[3];
+		vert[0].texCoord.V += heightTop[2];
+		vert[1].texCoord.V += heightTop[3];
+
+		vert[2].pos.Y += heightBottom[2];
+		vert[3].pos.Y += heightBottom[3];
+		vert[2].texCoord.V -= heightBottom[2];
+		vert[3].texCoord.V -= heightBottom[3];
+	}
+	else if (m_side == PartTileSide::Back)
+	{
+		for (int i = 0; i < 4; i++)
+			vert[i] = backVertices[i];
+
+		vert[0].pos.Y -= heightTop[0];
+		vert[1].pos.Y -= heightTop[1];
+		vert[0].texCoord.V += heightTop[0];
+		vert[1].texCoord.V += heightTop[1];
+
+		vert[2].pos.Y += heightBottom[0];
+		vert[3].pos.Y += heightBottom[1];
+		vert[2].texCoord.V -= heightBottom[0];
+		vert[3].texCoord.V -= heightBottom[1];
+	}
+	else if (m_side == PartTileSide::Left)
+	{
+		for (int i = 0; i < 4; i++)
+			vert[i] = leftVertices[i];
+
+		vert[0].pos.Y -= heightTop[0];
+		vert[2].pos.Y -= heightTop[2];
+		vert[0].texCoord.V += heightTop[0];
+		vert[2].texCoord.V += heightTop[2];
+
+		vert[1].pos.Y += heightBottom[0];
+		vert[3].pos.Y += heightBottom[2];
+		vert[1].texCoord.V -= heightBottom[0];
+		vert[3].texCoord.V -= heightBottom[2];
+	}
+	else if (m_side == PartTileSide::Right)
+	{
+		for (int i = 0; i < 4; i++)
+			vert[i] = rightVertices[i];
+
+		vert[0].pos.Y -= heightTop[1];
+		vert[2].pos.Y -= heightTop[3];
+		vert[0].texCoord.V += heightTop[1];
+		vert[2].texCoord.V += heightTop[3];
+
+		vert[1].pos.Y += heightBottom[1];
+		vert[3].pos.Y += heightBottom[3];
+		vert[1].texCoord.V -= heightBottom[1];
+		vert[3].texCoord.V -= heightBottom[3];
+	}
+
+	sg_update_buffer(m_bind.vertex_buffers[0], SG_RANGE(vert));
 }
 //-----------------------------------------------------------------------------
 void PartTile::Draw()
@@ -202,13 +192,13 @@ void PartTile::Draw()
 	sg_draw(0, 6, 1);
 }
 //-----------------------------------------------------------------------------
-void PartTile::createVertexBuffer()
+void PartTile::createVertexBuffer(const HeightTile& heightTop, const HeightTile& heightBottom)
 {
 	sg_buffer_desc vertexBufferDesc = { .size = sizeof(TileVertex)*4, .type = SG_BUFFERTYPE_VERTEXBUFFER, .usage = SG_USAGE_DYNAMIC};
 	sg_buffer buffer = sg_make_buffer(&vertexBufferDesc);
 	m_bind.vertex_buffers[0] = buffer;
 	//planeBufferDesc.data = SG_RANGE(vert);
-	Update();
+	UpdateGeometry(heightTop, heightBottom);
 }
 //-----------------------------------------------------------------------------
 void Tile::Init()
@@ -231,14 +221,21 @@ void Tile::Close()
 	m_right.Close();
 }
 //-----------------------------------------------------------------------------
-void Tile::Update()
+void Tile::SetHeights(const HeightTile& heightTop, const HeightTile& heightBottom)
 {
-	m_top.Update();
-	m_bottom.Update();
-	m_forward.Update();
-	m_back.Update();
-	m_left.Update();
-	m_right.Update();
+	m_heightTop = heightTop;
+	m_heightBottom = heightBottom;
+	UpdateGeometry();
+}
+//-----------------------------------------------------------------------------
+void Tile::UpdateGeometry()
+{
+	m_top.UpdateGeometry(m_heightTop, m_heightBottom);
+	m_bottom.UpdateGeometry(m_heightTop, m_heightBottom);
+	m_forward.UpdateGeometry(m_heightTop, m_heightBottom);
+	m_back.UpdateGeometry(m_heightTop, m_heightBottom);
+	m_left.UpdateGeometry(m_heightTop, m_heightBottom);
+	m_right.UpdateGeometry(m_heightTop, m_heightBottom);
 }
 //-----------------------------------------------------------------------------
 void Tile::Draw()

@@ -44,13 +44,53 @@ void TileMap::Update(float deltaTime)
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 
-	static int ttt= 0;
-	if (ttt == 20)
+	static bool first = true;
+	if (first == true)
 	{
-		m_tile.Update();
-		ttt = 0;
+		first = false;
+		return;
 	}
-	ttt++;
+
+	static float ttt1 = 0;
+	static float ttt2 = 0;
+	static float ttt3 = 0;
+	static float ttt4 = 0;
+	static bool reverse = false;
+
+	if (!reverse)
+	{
+		//ttt1 += rand() % 100 / 10000.0f;
+		ttt2 += rand() % 100 / 10000.0f;
+		//ttt3 += rand() % 100 / 10000.0f;
+		//ttt4 += rand() % 100 / 10000.0f;
+
+		HeightTile heightTop = { ttt1, ttt2, ttt3, ttt4 };
+		HeightTile heightBottom = { 0.1, 0.2, 0.3, 0.4 };
+		m_tile.SetHeights(heightTop, heightBottom);
+
+		if (ttt1 > 0.5f || ttt2 > 0.5f || ttt3 > 0.5f || ttt4 > 0.5f)
+		{
+			reverse = true;
+		}
+	}
+	else
+	{
+		//ttt1 -= rand() % 100 / 10000.0f;
+		ttt2 -= rand() % 100 / 10000.0f;
+		//ttt3 -= rand() % 100 / 10000.0f;
+		//ttt4 -= rand() % 100 / 10000.0f;
+
+
+		HeightTile heightTop = { ttt1, ttt2, ttt3, ttt4 };
+		HeightTile heightBottom = { 0.1, 0.2, 0.3, 0.4 };
+		m_tile.SetHeights(heightTop, heightBottom);
+
+		if (ttt1 < 0.0f || ttt2 < 0.0f || ttt3 < 0.0f || ttt4 < 0.0f)
+		{
+			reverse = false;
+		}
+	}
+
 
 	//sg_update_buffer(bind_plane.vertex_buffers[0], SG_RANGE(planeVertices));
 }
