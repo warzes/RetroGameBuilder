@@ -59,8 +59,9 @@ void TileMap::Update(float deltaTime)
 
 	if (!reverse)
 	{
-		//ttt1 += rand() % 100 / 10000.0f;
-		ttt2 += rand() % 100 / 10000.0f;
+		ttt1 += rand() % 100 / 10000.0f;
+		ttt2 = ttt1;
+		//ttt2 += rand() % 100 / 10000.0f;
 		//ttt3 += rand() % 100 / 10000.0f;
 		//ttt4 += rand() % 100 / 10000.0f;
 
@@ -75,8 +76,9 @@ void TileMap::Update(float deltaTime)
 	}
 	else
 	{
-		//ttt1 -= rand() % 100 / 10000.0f;
-		ttt2 -= rand() % 100 / 10000.0f;
+		ttt1 -= rand() % 100 / 10000.0f;
+		ttt2 = ttt1;
+		//ttt2 -= rand() % 100 / 10000.0f;
 		//ttt3 -= rand() % 100 / 10000.0f;
 		//ttt4 -= rand() % 100 / 10000.0f;
 

@@ -2,6 +2,7 @@
 #include "Tile.h"
 #include "shader.h"
 // TODO: сделать возможность запечь буфер в статический (сейчас они динамические), когда карта завершена (но оставить динамик для каких-нибудь лифтов)
+// TODO: возможно вместо двух треугольник делать 4 треугольника на сторону куба/тайла
 //-----------------------------------------------------------------------------
 void failCallback();
 uint8_t file_buffer[2 * 1024 * 1024];
@@ -113,6 +114,8 @@ void PartTile::UpdateGeometry(const HeightTile& heightTop, const HeightTile& hei
 			vert[i] = topVertices[i];
 			vert[i].pos.Y -= heightTop[i];
 		}
+
+
 	}
 	else if (m_side == PartTileSide::Bottom)
 	{
